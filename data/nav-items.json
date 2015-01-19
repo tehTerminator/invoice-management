@@ -1,0 +1,32 @@
+[
+	{
+		"name" : "Dashboard",
+		"link" : "dashboard.php",
+		"icon" : "book"
+	},
+	{
+		"name" : "Log",
+		"link" : "logs.php",
+		"icon" : "pencil"
+	},
+	{
+		"name" : "Customers", 
+		"link" : "customers.php",
+		"icon" : "users"
+	},
+	{
+		"name" : "Products", 
+		"link" : "products.php",
+		"icon" : "cube"
+	},
+	{
+		"name" : "Invoice",	
+		"link" : "invoices.php",
+		"icon" : "cart"
+	},
+	{
+		"name" : "Report", 
+		"link" : "reports.php",
+		"icon" : "print"	
+	}
+]
