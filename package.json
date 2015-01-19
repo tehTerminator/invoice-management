@@ -1,0 +1,26 @@
+{
+  "name": "masterApp",
+  "version": "0.0.0",
+  "description": "One App to Rule them All",
+  "main": "index.php",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "gulp": "^3.8.10"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bower-install": "^1.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Prateek Kher",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "0.0.0"
+  },
+  "keywords": [
+    "masterApp"
+  ]
+}
