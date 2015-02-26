@@ -16,8 +16,10 @@
 			$this->name = $tableName;
 		}
 
-		function insertRow($data){
-			$values = array();
+		function insertRow($input){
+
+			$data = $this->filterData($input);
+
 			$this->query = "INSERT INTO $this->name(". implode(",", array_keys($data))  . ") VALUES";
 
 			if( isMulti($data) ){
@@ -36,7 +38,6 @@
 				$placeHolder = "(" . implode(", ", $arr ) . ")";
 				$this->query .= $placeHolder;
 				$this->dataRow = array_values($data);
-				print_r($this->dataRow);
 			}
 
 		}
@@ -77,7 +78,10 @@
 			}
 
 			if($limit > 0){
-				$this->query .= " LIMIT 0, $limit";
+				if( strpos($limit, ",") )
+					$this->query = " LIMIT $limit";
+				else
+					$this->query .= " LIMIT 0, $limit";
 			}
 		}
 
@@ -89,7 +93,7 @@
 		function executeQuery(){
 			if ($this->query == "")
 				throw new Exception("Query not found, Please Create Query Before Executing", 1);
-	
+
 			try {
 				$this->stmt = $this->db->prepare($this->query);
 				$this->stmt->execute( $this->dataRow );
@@ -97,10 +101,35 @@
 				$this->query = "";
 			} catch (PDOException $e) {
 				echo $e->getMessage();
-			} 
+			}
+		}
+
+		function getColumnName(){
+			$this->query = "SELECT column_name FROM information_schema.columns WHERE table_schema = '" . DATABASE . "' AND table_name = '$this->name'";
+			$this->executeQuery();
+		}
+
+		function filterData($data){
+			$this->getColumnName();
+			$output = array();
+
+			foreach($this->output as $row){
+				$output[] = $row['column_name'];
+			}
+
+			$difference = array_diff( array_keys($data), $output );
+			foreach($difference as $diff){
+				unset( $data[$diff] );
+			}
+
+			return $data;
 		}
 
 		function getJSON(){
 			return json_encode($this->output);
+		}
+
+		function lastInsertId(){
+			return $this->db->lastInsertId();
 		}
 	}

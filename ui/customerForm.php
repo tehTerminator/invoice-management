@@ -1,11 +1,14 @@
-<!--::START:: editCustomerForm.php-->
-<button class="ui fluid back button"><i class="icon arrow up"></i></button>
-<form id="editCustomerForm" data-action="php/updateData.php?t=customers" class="ui form segment" data-validation="true" data-source="customers">
-	
-	<div class="required field">
-		<label for="name">Customer ID</label>
-		<input type="text" data-required="true" name="id" readonly>
-	</div>
+<!--::START:: customerForm.php-->
+<form id = '<?php echo $form_id ?>' data-action='<?php echo $url; ?>' class="ui form segment" data-validation="true" data-source="customers">
+
+	<?php if( $enable_id_field ): ?>
+		<div class="required field">
+			<label for="id">Customer ID</label>
+			<input type="number" data-required="true" name="id" readonly>
+		</div>
+
+	<?php endif; ?>
+
 
 	<div class="two fluid fields">
 
@@ -15,13 +18,13 @@
 		</div>
 
 		<div class="fluid field">
-			<label for="name">Company</label>
+			<label for="company">Company</label>
 			<input type="text" data-required="true" name="company">
 		</div>
-		
+
 
 	</div>
-	
+
 
 	<div class="required field">
 		<label for="address">Address</label>
@@ -38,9 +41,9 @@
 			<input type="text" name="notes">
 		</div>
 	</div>
-	
+
 	<br />
 	<br />
 	<button class="ui right floated labeled icon blue submit button"><i class="icon save"></i>Submit</button>
 </form>
-<!--::END:: editCustomerForm.php-->
+<!--::END:: customerForm.php-->

@@ -1,44 +1,68 @@
 jQuery("document").ready(function(){
 	autoload(['customers|0|name.ASC', 'products|0|name.ASC', 'invoices']);
-	executeTasks( [fillDropdown, storeRates] );
+	executeTasks( [fillDropdown] );
 	executeTasks( global.tasks );
 });
 
-function storeRates(){
-	"use strict";
-
-	setTask('Storing Product Rates');
-	var source = global['products'].data,
-	invoices = global['invoices'];
-	invoices['product_rates'] = {};
-	for(var i=0; i < source.length; i++){
-		invoices['product_rates'][ source[i].id ] = source[i].rate;
-	}
-}
-
 function updateRow( element ){
+	"use strict";
 	var e = jQuery(element),
-	rateList = global['invoices']['product_rates'],
-	callee = e.attr("name").substr(0, e.attr("name").length-2);
-	if( callee == "product_id"  ){
-		e.closest("tr").find("[name='rate[]']").val( rateList[ e.val() ] );
-		updateAmount( element );
-	}
+	rate = products['hash'][e.val()][rate];
+
+	jQuery("#product_rate").val( rate );
+	updateAmount();
 }
 
-function updateAmount( element ){
-	e = jQuery(element),
-	row = e.closest("tr"),
-	quantity = row.find("[name='quantity[]']").val(),
-	rate = row.find("[name='rate[]']").val(),
-	discount = row.find("[name='discount[]']").val(),
-	total = 0;
+function updateAmount(){
+	"use strict";
+	var rate = jQuery("#product_rate").val(),
+		qty = jQuery("#quantity").val(),
+		disc = jQuery("#discount").val(),
+		amt = Number( (rate * quantity)*(1 - disc / 100 ) );
 
-	row.find("[name='amount[]']").val( (quantity * rate) * (1-discount/100) );
+	jQuery("#amount").val( amt );
+}
 
-	row.closest("table").find("[name='amount[]'").each(function(){
-		total += jQuery(this).val();
+function moreEvents(){
+
+	jQuery("#postInvoiceBtn").on('click', function(){
+		//Add Data and Change Frame
+		jQuery("#invoiceStep").find(".step").eq(1).removeClass("active").addClass("completed");
+		jQuery("#invoiceStep").find(".step").eq(2).addClass("active");
+		jQuery("#invoices").hide();
+		jQuery("#transactions").slideDown();
+		setTimeout(function(){
+			//Wait till Data is updated and then retrieve Data
+
+		}, 1000);
 	});
 
-	row.closest("table").find(".grandTotal").val(total);
+	jQuery("#addRowBtn").on('click', function(){
+		//Add Data
+		var product_id = jQuery("#product_id").val(),
+			quantity = jQuery("#quantity").val(),
+			discount = jQuery("#discount").val();
+
+		if( global['transactions']['hash'][product_id] !== undefined ){
+			global['transactions']['hash'][product_id]["quantity"] += quantity;
+			global['transactions']['hash'][product_id]["discount"] = discount;
+		}
+		else{
+			global['transaction']['hash'][product_id] = {
+				'quantity' : quantity,
+				'discount' : discount
+			};
+		}
+	}, function(){
+		global.transactions.data = [];
+		for(var pid in global.transactions.hash){
+			global.transactions.data.push({
+				"product_id" : pid,
+				"product_name" : global['products']['hash'][pid]['name'],
+				"rate" : global['products']['hash'][pid]['rate'],
+				"quantity" : global['transactions']['hash'][pid]['quantity'],
+				"discount" : global['transactions']['hash'][pid]['discount']
+			});
+		}
+	});
 }

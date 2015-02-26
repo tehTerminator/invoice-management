@@ -7,13 +7,12 @@
 	$objectType = $_GET['t'];
 
 	$myObject = new table($con, $objectType);
-
-	print_r($_POST);
-
 	$myObject->insertRow($_POST);
-	echo $myObject->query;
+	$lastQuery = $myObject->query;
 	$myObject->executeQuery();
-	
-	echo "Sucessfully Added Data";
 
+
+	$output = array("lastInsertId" => $myObject->lastInsertId(), "message"=>"Successfully Added Record to $objectType", "lastQuery"=>$lastQuery);
+
+	echo json_encode($output);
 ?>	

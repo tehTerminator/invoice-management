@@ -1,66 +1,93 @@
-<form data-action="php/addData?t=invoices&amp;r=transactions" class="ui form segment">
+<div class="row">
 
-	<div class="ui segment">
-		<div class="ui header">Customer Information</div>
-		<div class="ui three fields" data-source="customers" data-type="autofill">
-			<div class="two wide field"><label for="id">Customer Id</label><input type="text" name="id" readonly></div>
-			<div class="four wide field"><label for="name">Customer Name</label><input type="text" name="name" readonly></div>
-			<div class="ten wide field"><label for="company">Company</label><input type="text" name="company" readonly></div>
-		</div>
-	</div>
-	
-	<table class="ui center aligned celled table segment" data-type="dynamic" data-source="templateRows">
-		<thead>
-			<tr>
-				<th>Product</th>
-				<th>Quantity</th>
-				<th>Rate</th>
-				<th>Disc.</th>
-				<th>Amount</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr class="templateRow">
-				<td>	
-					<div class="ui fluid search dropdown" data-source="products">
-						<input type="hidden" name="product_id[]" onchange="updateRow(this)">
-						<div class="default text">Transfer From Account</div>
-						<div class="menu">
-							
-						</div>
-					</div>
-				</td>
-				<td>
-					<div class="input"><input type="number" min="0" step="1" value="0" name="quantity[]" onchange="updateAmount(this)"></div>
-				</td>
-				<td>
-					<div class="input"><input type="number" min="0" step="1" name="rate[]" value="0" readonly></div>
-				</td>
-				<td>
-					<div class="input"><input type="number" min="0" max="99" step="0.5" value="0" name="discount[]" onchange="updateAmount(this)"></div>
-				</td>
-				<td>
-					<div class="input"><input type="number" min="0" step="1" value="0" name="amount[]" readonly></div>
-				</td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<td colspan="1">
-				<div class="ui two buttons">
-					<button class="ui red icon button"><i class="icon remove"></i></button>
-					<button class="ui green icon button"><i class="icon add"></i></button>
+	<div id="addInvoiceForm" class="ui form segment" data-action="php/addData.php?t=invoices" data-validation='true'>
+
+		<div class="row">
+			<div class="ui header">Customer Information</div>
+			<div class="ui three fields" data-source="customers">
+
+				<div class="two wide field">
+					<label for="customer_id">Customer Id</label>
+					<input type="text" name="customer_id" readonly>
 				</div>
-			</td>
 
-			<td colspan="2">
-				<button class="ui right fluid floated blue submit labeled icon button"><i class="icon save"></i>Submit</button>
-			</td>
+				<div class="four wide field">
+					<label for="customer_name">Customer Name</label>
+					<input type="text" name="customer_name" readonly>
+				</div>
 
-			<td style="text-align:center;"><strong>Total Amount</strong></td>
-			<td><div class="ui icon input"><input type="text" readonly><i class="icon rupee"></i></div></td>
-		</tfoot>
+				<div class="ten wide field">
+					<label for="customer_company">Company</label>
+					<input type="text" name="customer_company" readonly>
+				</div>
 
-	</table>
+			</div>
+		</div>
 
+		<div class="ui fluid three fields">
+			<div class="field">
+				<label for="invoice_date">Invoice Date</label>
+				<input type="date" name="invoice_date" data-required="true">
+			</div>
 
-</form>
+			<div class="field">
+				<label for="notes">Notes</label>
+				<input type="text" id="invoice_note" name="notes" data-required="true">
+			</div>
+
+			<div class="field">
+				<label for="paid">Paid</label>
+				<div class="ui toggle checkbox">
+					<input id="paid" type="checkbox" name="paid" value="0">
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<div class="row">
+
+	<div id="addTransactionsForm" action="" class="ui form segment">
+
+		<div class="ui five fields">
+			<div class="field">
+				<label for="Product">Product</label>
+				<div class="ui fluid search dropdown" data-source="products">
+					<input type="hidden" name="product_id" onchange="updateRow(this)">
+					<div class="default text">Product Name</div>
+					<div class="menu">
+						<!--Items Will Be Added Automatically-->
+					</div>
+				</div>
+			</div>
+
+			<div class="field">
+				<label for="rate">Rate</label>
+				<input id="product_rate" type="number" readonly>
+			</div>
+
+			<div class="field">
+				<label for="quantity">Quantity</label>
+				<input name="quantity" type="number" onchange="updateAmount(this)">
+			</div>
+
+			<div class="field">
+				<label for="discount">Discount</label>
+				<input name="discount" type="number" onchange="updateAmount(this)">
+			</div>
+
+			<div class="field">
+				<label for="amount">Amount</label>
+				<input name="amount" type="number" readonly>
+			</div>
+
+		</div>
+
+	</div><!--Form Segment Ends Here-->
+
+	<button id="addRowBtn" class="ui blue button">Add Data</button>
+
+</div>

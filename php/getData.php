@@ -6,10 +6,13 @@
 
 	$objectType = $_GET['t'];
 
-	$condition = isset($_GET['id']) ? "id = " . $_GET['id'] : "";
+	$id = isset($_GET['id']) ? $_GET['id'] : "";
 	$limit = isset($_GET['limit']) ? $_GET['limit'] : 0;
 	$orderBy = isset($_GET['orderby']) ? $_GET['orderby'] : "";
 	$orderType = isset($_GET['ordertype']) ? $_GET['ordertype'] : "";
+
+	if( $id > 0 ) $condition = "id = " . $id;
+	else $condition = "";
 
 
 	$myObject = new table($con, $objectType);

@@ -3,12 +3,12 @@ var global = {
 		"str" : function( s ){ return s; },
  		"currency" : function( n ){ return "<i icon rupee></i>" + Number(n).toFixed(2); },
  		"deleteBtn" : function(){
-			delBtn = createElement({"tag" : "button", "class" : "ui circular red delete icon button", "onclick":"delBtnPress(this)"});
+			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":"delBtnPress(this)"});
 			delBtn.append( createElement({"tag": "i", "class":"icon remove"}));
 			return delBtn[0];
 		},
-		"selectBtn" : function(){
-			editBtn = createElement({"tag": "button", "class":"ui circular icon select blue button", "onclick":"selectBtnPress(this)"});
+		"selectBtn" : function( event ){
+			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":event+"(this)"});
 			editBtn.append( createElement({"tag": "i", "class":"icon arrow right"}) );
 			return editBtn[0];
 		},
@@ -20,6 +20,21 @@ var global = {
 				i.addClass("remove");
 
 			return i[0];
+		},
+		"decimal" : function( n ){ return Number(n).toFixed(2); },
+		"calc" : function(){
+			var tokens = tokanize( arguments[0] ),
+				symbolTable = arguments[1],
+				i = 0,
+				eq = "";
+
+			for( i = 0; i < tokens.length; i++ ){
+				if( symbolTable[ token[i] ] !== undefined )
+					tokens[i] = symbolTable[ token[i] ];
+				eq += token[i];
+			}
+
+			return eval( eq );
 		}
 	},
 	"server" : {
@@ -58,34 +73,46 @@ var global = {
 	"customers" : {
 		"data" : [],
 		"selectedIndex" : 0,
+		"hash" : {}
 	},
 
 	"invoices" : {
 		"data" : [],
-		"selectedIndex" : 0,	
+		"selectedIndex" : 0,
+		"hash" : {}
 	},
 
 	"products" : {
 		"data" : [],
-		"selectedIndex" : 0
+		"selectedIndex" : 0,
+		"hash" : {}
 	},
 
 	"transactions" : {
 		"data" : [],
-		"selectedIndex" : 0
+		"selectedIndex" : 0,
+		"hash" : {}
 	},
 
 	"accounts" : {
 		"data" : [],
-		"selectedIndex" : 0
+		"selectedIndex" : 0,
+		"hash" : {}
 	},
 	"copier" : {
 		"data" : [],
-		"selectedIndex" : 0
+		"selectedIndex" : 0,
+		"hash" : {}
 	},
 	"templateRows" : {
 
+	},
+	"message" : {
+
+	},
+	"clearCachedData" : function( target ){
+		global[target].data = [];
+		global[target].hash = {};
+		global[target].selectedIndex = -1;
 	}
-
 };
-

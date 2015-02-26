@@ -15,4 +15,6 @@ $(document).ready(function(){
 	});
 
 	jQuery("nav > a").eq(0).addClass("active");
+
+	jQuery(".ui.sticky").sticky();
 });

@@ -1,4 +1,4 @@
-<h3 class="ui header">Recent Logs</h3>
+<h3 class="ui block green header">Recent Logs</h3>
 <table id="recentCopier" class="ui celled sortable table segment" data-type="autoFill" data-source="copier">
 	
 	<thead>

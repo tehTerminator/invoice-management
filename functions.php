@@ -13,17 +13,6 @@
 		}
 	}
 
-	function insertRow($db, $table, $variables, $terminals){
-		$query = "INSERT INTO " . $table;
-		$query .= "(" . implode(",", $variables) . ")";
-		$query .= " VALUES('" . implode("','", $terminals) . "')";
-
-		try {
-			$db->exec($query);
-		} catch (PDOException $e) {
-			die( $e->getMessage() );
-		}
-	}
 
 	function isMulti($arr){
 		foreach($arr as $a){
@@ -31,5 +20,7 @@
 		}
 		return false;
 	}
+
+	$numbers = array("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen");
 
 

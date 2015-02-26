@@ -32,7 +32,7 @@ function initTabs(){
 	"use strict";
 	setTask("Initializing Tabs");
 
-	//Hiding All Tabs other than First Tab	
+	//Hiding All Tabs other than First Tab
 	jQuery(".ui.tabular.menu")
 		.next(".ui.bottom.attached.segment")
 		.children(".ui.basic.segment:not(:first-child)").hide();
@@ -78,7 +78,6 @@ function initControls(){
 			prevElement = parent.attr("data-prev");
 			parent.hide();
 			jQuery("#"+prevElement).show();
-			log(prevElement);
 		}
 	);
 
@@ -129,7 +128,7 @@ function selectBtnPress(me){
 
 	var step = jQuery(me).closest("[data-step]");
 
-	if( step !== undefined ){
+	if( step[0] !== undefined ){
 		step = step.attr("data-step");
 		var stepId = step.substr(0, step.length-1),
 			index = Number(step.substr(step.length-1, 1));
@@ -240,7 +239,7 @@ function fillAllTables(){
 		"use strict";
 		if( jQuery(this).attr("data-type") == "autoFill" ){
 			jQuery(this).fillTable();
-		}	
+		}
 	});
 }
 
@@ -254,11 +253,11 @@ function executeTasks( list ){
 	}
 	else{
 		for( var i =0; i < list.length ; i++ ){
-			global['server']['queue'].push(list[i]);
+			global['server']['queue'].unshift(list[i]);
 		}
 		global['server']['execute']();
 	}
-	
+
 	global['server']['totalTasks'] = global['server']['queue'].length;
 }
 
@@ -283,8 +282,9 @@ function initDynamicTables(){
 
 	jQuery(".ui.table[data-type='dynamic']")
 		.find("button.green.button")
-		.on('click', function(){
+		.on('click', function(e){
 			"use strict";
+			e.preventDefault();
 			var parent = jQuery(this).closest("table"),
 				tbody = parent.children("tbody"),
 				source = global[parent.attr("data-source")],
@@ -297,52 +297,89 @@ function initDynamicTables(){
 
 	jQuery(".ui.table[data-type='dynamic']")
 		.find("button.red.button")
-		.on('click', function(){
+		.on('click', function(e){
 			"use strict";
+			e.preventDefault();
 			var table = jQuery(this).closest("table"),
 				tbody = table.find("tbody");
 
 			if( tbody.children("tr").length == 1 )
-				return	
-			else 
+				return
+			else
 				tbody.children("tr").eq(-1).remove();
-
 		});
-
 }
 
-
-
-function load( data ){
-	"use strict";
-	data = data.split("|");
-	var source = global[data[0]],
-	link = "php/getData.php?t=" + data[0];
-
-	setTask("Loading " + data[0].toUpperCase());
-
-	if( data.length == 1 ){
-		data[1] = 0;
-		data[2] = "name.DESC";
+function crunchData( source ){
+	for( var i = 0; i < source.data.length; i++ ){
+		source['hash'][source.data[i].id] = source.data[i];
 	}
+}
+
+function load( arg ){
+	"use strict";
+	var param = {};
+	arg = arg.split("|");
+	var source = global[arg[0]],
+	link = "php/getData.php?t=" + arg[0],
+	currentTime = new Date();
+
+	if( source.createdOn !== undefined && currentTime - source.createdOn < 120000 )
+		return;
+
+	setTask("Loading " + arg[0].toUpperCase());
+
 	jQuery.ajax({
 			url: link,
 			type: 'get',
 			data: {
-				'limit' : data[1],
-				'orderby' : data[2].split(".")[0],
-				'ordertype' : data[2].split(".")[1]
+				'limit' : arg[1] == undefined ? 0 : arg[1],
+				'orderby' : arg[2] == undefined ? "name" : arg[2].split(".")[0],
+				'ordertype' : arg[2] == undefined ? "DESC" : arg[2].split(".")[1],
+				'id' : arg[3] == undefined ? "" : arg[3]
 			},
 			success: function (data) {
 				source['data'] = JSON.parse(data);
+				setTimeout( function(){
+					crunchData( source );
+				}, 2000)
 			}
 		});
+
+	source.createdOn = currentTime;
 }
 
 function autoload(arg){
 	var q = []
 	for(var i=0; i<arg.length;i++){
-		q.push( "load('" + arg[i] + "')" );
+		q.unshift( "load('" + arg[i] + "')" );
 	}
 	executeTasks( q );
 }
+
+function tokanize( equation ){
+    var stack1 = [],
+        i = 0,
+        operators = "+-*/()",
+        characters = "abcdefghijklmnopqrstuvwxyz_-0123456789.",
+        symbol = "";
+
+    for(i = 0; i < equation.length; i++){
+    	var c = equation[i];
+    	if( has(operators, c)  ){
+    		stack1.push(c);
+    	}
+    	else if( has(characters, c) ){
+    		while( !( has(operators,c) || c === ")" || i === equation.length ) ){
+    			symbol += c;
+    			c = equation[++i];
+    		}
+    		stack1.push(symbol);
+    		symbol = "";
+    		--i;
+    	}
+	}
+
+	return stack1;
+}
+
