@@ -22,18 +22,34 @@ var global = {
 			return i[0];
 		},
 		"decimal" : function( n ){ return Number(n).toFixed(2); },
-		"calc" : function(){
-			var tokens = tokanize( arguments[0] ),
-				symbolTable = arguments[1],
+		"eval" : function(args){
+			var sourceTable = args[0],
+				expression = args[1],
+				symbolTable = args[2];
+
+			var tokens = tokanize( sourceTable, expression )
 				i = 0,
 				eq = "";
 
-			for( i = 0; i < tokens.length; i++ ){
-				if( symbolTable[ token[i] ] !== undefined )
-					tokens[i] = symbolTable[ token[i] ];
-				eq += token[i];
-			}
 
+			if( global.cache[ sourceTable ]['var_index'] !== undefined ){
+				//if data exist in cache
+				//Might improve performance for equation with many variables
+				for( var b in global.cache[ sourceTable ]['var_index'] ){
+					tokens[b] = symbolTable[ global['cache'][sourceTable]['var_index'][b] ];
+				}
+			}
+			else{
+				//Replace variables with value
+				//Stores location of variables in cache for further usage
+				for( i = 0; i < tokens.length; i++ ){
+					if( symbolTable[ tokens[i] ] !== undefined ){
+						global['cache'][sourceTable]['var_index'][i] = tokens[i];
+						tokens[i] = symbolTable[ tokens[i] ];
+					}
+					eq += tokens[i];
+				}
+			}
 			return eval( eq );
 		}
 	},
@@ -54,10 +70,18 @@ var global = {
 				var a = global['server']['queue'].pop();
 				global['server']['isRunning'] = true;
 				setTimeout( function(){
-					if( typeof(a) === 'function' ) a();
-					else eval(a);
-					updateLoader();
-					global['server']['execute']();
+					try{
+						if( typeof(a) === 'function' ) a();
+						else eval(a);
+					}
+					catch(e){
+						log("Error was encountered while executing " + a );
+						log(e);
+					}
+					finally{
+						updateLoader();
+						global['server']['execute']();
+					}
 				}, 1000 );
 			}
 		},
@@ -114,5 +138,9 @@ var global = {
 		global[target].data = [];
 		global[target].hash = {};
 		global[target].selectedIndex = -1;
-	}
+	},
+	"cache" : {
+		"lastIndex" : 0
+	},
+	"getIndex" : function(){ return global.cache.lastIndex++; }
 };

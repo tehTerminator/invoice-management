@@ -357,22 +357,35 @@ function autoload(arg){
 	executeTasks( q );
 }
 
-function tokanize( equation ){
+/**
+* Breaks equation into tokens
+* prevents direct execution of js expression
+* for security purpose
+* @return tokens<array>
+*/
+function tokanize( src, expression ){
+
+	//Lookup expression in Cache
+	if( global['cache'][src] !== undefined ) return global['cache'][src]['tokens'].slice();
+
+	//Create location in Cache if not found in cache
+	global['cache'][src] = {};
+
     var stack1 = [],
         i = 0,
         operators = "+-*/()",
         characters = "abcdefghijklmnopqrstuvwxyz_-0123456789.",
         symbol = "";
 
-    for(i = 0; i < equation.length; i++){
-    	var c = equation[i];
+    for(i = 0; i < expression.length; i++){
+    	var c = expression[i];
     	if( has(operators, c)  ){
     		stack1.push(c);
     	}
     	else if( has(characters, c) ){
-    		while( !( has(operators,c) || c === ")" || i === equation.length ) ){
+    		while( !( has(operators,c) || c === ")" || i === expression.length ) ){
     			symbol += c;
-    			c = equation[++i];
+    			c = expression[++i];
     		}
     		stack1.push(symbol);
     		symbol = "";
@@ -380,6 +393,17 @@ function tokanize( equation ){
     	}
 	}
 
+	//Store tokens in Cache
+	global['cache'][src]['tokens'] = stack1.slice();
+	//Create Variable Location Object in Cache
+	global['cache'][src]['var_index'] = {};
 	return stack1;
 }
 
+/**
+* @description Finds a character in String
+* @return Boolean
+*/
+function has( some_string, character){
+	return some_string.indexOf(character) !== -1
+}

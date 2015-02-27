@@ -35,7 +35,13 @@ jQuery.fn.clearTable = function(){
 jQuery.fn.fillTable = function(){
 	"use strict";
 	var headerRow = this.children("thead").children("tr").children(),
-	controller = {};
+	controller = {},
+	tableId = this.attr("id");
+
+	if( tableId === undefined ){
+		this.attr("id", global.getIndex() );
+		tableId = this.attr("id");
+	}
 
 	controller.cellCount = headerRow.length;
 	var source = global[this.attr("data-source")],
@@ -50,22 +56,20 @@ jQuery.fn.fillTable = function(){
 		for( var i = 0; i < controller.cellCount; i++ ){
 			controller[i] = {};
 
-			var modal = headerRow.eq(i).attr("data-modal").split("|");
+			var args = headerRow.eq(i).attr("data-modal").split("|");
 
-			controller[i]["modal"] = modal[0];
+			controller[i]["modal"] = args[0];
 
-			if( modal[1] == undefined )
-				controller[i]["format"] = "str"
+			if( args[1] == undefined )
+				controller[i]["format"] = "str";
 			else
-				controller[i]["format"] = modal[1];
+				controller[i]["format"] = args[1];
 		}
 	}
 	else{
 		log("Table Formatting not Enabled, Script Now Exiting");
 		return;
 	}
-
-	log( controller );
 
 	if( source == undefined || source.length == 0 ) return;
 
@@ -76,7 +80,21 @@ jQuery.fn.fillTable = function(){
 		for(var j=0; j < controller["cellCount"]; j++){
 			var cell = document.createElement("td"),
 				format = global.format[controller[j]['format']],
-				modal = source[i][controller[j]['modal']] == undefined ? controller[j]['modal'] : source[i][controller[j]['modal']],
+				modal = null,
+				data = null;
+
+				//source[i][controller[j]['modal']] == undefined ? controller[j]['modal'] : source[i][controller[j]['modal']]
+
+				if( source[i][controller[j]['modal']] == undefined && controller[j]['format'] !== "eval"  ){
+					modal = controller[j]['modal'];
+				}
+				else if( controller[j]['format'] === "eval" ){
+					var s = tableId + "&&" + j;
+					modal = [ s, controller[j]['modal'], source[i] ]
+				}
+				else{
+					modal = source[i][controller[j]['modal']];
+				}
 				data = format( modal );
 			if( typeof(data) !== "object"){
 				cell.innerHTML = data ;
