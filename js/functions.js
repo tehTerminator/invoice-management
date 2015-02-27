@@ -364,7 +364,6 @@ function autoload(arg){
 * @return tokens<array>
 */
 function tokanize( src, expression ){
-
 	//Lookup expression in Cache
 	if( global['cache'][src] !== undefined ) return global['cache'][src]['tokens'].slice();
 
@@ -387,6 +386,7 @@ function tokanize( src, expression ){
     			symbol += c;
     			c = expression[++i];
     		}
+			symbol = jQuery.trim( symbol );
     		stack1.push(symbol);
     		symbol = "";
     		--i;
@@ -395,8 +395,6 @@ function tokanize( src, expression ){
 
 	//Store tokens in Cache
 	global['cache'][src]['tokens'] = stack1.slice();
-	//Create Variable Location Object in Cache
-	global['cache'][src]['var_index'] = {};
 	return stack1;
 }
 

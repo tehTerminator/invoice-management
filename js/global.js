@@ -36,13 +36,17 @@ var global = {
 				//if data exist in cache
 				//Might improve performance for equation with many variables
 				for( var b in global.cache[ sourceTable ]['var_index'] ){
-					tokens[b] = symbolTable[ global['cache'][sourceTable]['var_index'][b] ];
+					tokens[b] = symbolTable[ tokens[b] ];
 				}
+
+				eq = tokens.join().replace(/,/g,"");
 			}
 			else{
+				global.cache[ sourceTable ]['var_index'] = {};
 				//Replace variables with value
 				//Stores location of variables in cache for further usage
 				for( i = 0; i < tokens.length; i++ ){
+
 					if( symbolTable[ tokens[i] ] !== undefined ){
 						global['cache'][sourceTable]['var_index'][i] = tokens[i];
 						tokens[i] = symbolTable[ tokens[i] ];
@@ -50,6 +54,7 @@ var global = {
 					eq += tokens[i];
 				}
 			}
+
 			return eval( eq );
 		}
 	},
