@@ -2,8 +2,8 @@ var global = {
 	"format" : {
 		"str" : function( s ){ return s; },
  		"currency" : function( n ){ return "<i icon rupee></i>" + Number(n).toFixed(2); },
- 		"deleteBtn" : function(){
-			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":"delBtnPress(this)"});
+ 		"deleteBtn" : function( event ){
+			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":event+"(this)"});
 			delBtn.append( createElement({"tag": "i", "class":"icon remove"}));
 			return delBtn[0];
 		},
@@ -25,12 +25,12 @@ var global = {
 		"eval" : function(args){
 			var sourceTable = args[0],
 				expression = args[1],
-				symbolTable = args[2];
+				symbolTable = args[2],
+				hasVariable = false;
 
 			var tokens = tokanize( sourceTable, expression )
 				i = 0,
 				eq = "";
-
 
 			if( global.cache[ sourceTable ]['var_index'] !== undefined ){
 				//if data exist in cache
@@ -38,7 +38,7 @@ var global = {
 				for( var b in global.cache[ sourceTable ]['var_index'] ){
 					tokens[b] = symbolTable[ tokens[b] ];
 				}
-
+				//Replace ',' in equation so that they can be evaluated.
 				eq = tokens.join().replace(/,/g,"");
 			}
 			else{
@@ -53,6 +53,13 @@ var global = {
 					}
 					eq += tokens[i];
 				}
+			}
+
+			if( global['cache'][sourceTable]['total'] === undefined ){
+				global['cache'][sourceTable]['total'] = eval( eq );
+			}
+			else{
+				global['cache'][sourceTable]['total'] = Number(global['cache'][sourceTable]['total']) + eval(eq);
 			}
 
 			return eval( eq );
@@ -147,5 +154,9 @@ var global = {
 	"cache" : {
 		"lastIndex" : 0
 	},
-	"getIndex" : function(){ return global.cache.lastIndex++; }
+	"getIndex" : function(){ return global.cache.lastIndex++; },
+	"sum" : function( tableId, variable ){
+		variable = Number(variable.slice(3)) - 1;
+		return global['cache'][tableId + "&&" + variable]['total'];
+	}
 };

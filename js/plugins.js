@@ -4,11 +4,11 @@ jQuery.fn.updateForm = function(){
 	var input = this.find("[name]"),
 		source = global[this.attr("data-source")];
 
-	input.each(function(){
+	input.each(function(index){
 		"use strict";
 		var modal = jQuery(this).attr("name");
 		if( modal.indexOf("_") >= 0 )
-			modal = modal.split("_")[2]
+			modal = modal.split("_")[1]
 		if( jQuery(this).attr("type") == "checkbox" ){
 			var parent = jQuery(this).closest(".ui.checkbox");
 			if( source.data[ source['selectedIndex'] ][modal] == 1 ){
@@ -23,10 +23,18 @@ jQuery.fn.updateForm = function(){
 
 jQuery.fn.clearTable = function(){
 	"use strict";
-	tbody = this.find('tbody')[0];
+	var tbody = this.find('tbody')[0];
 
 	while( tbody.firstChild ){
 		tbody.removeChild( tbody.firstChild );
+	}
+
+	var id = this.attr("id");
+
+	for( var table in global.cache ){
+		if( has(table, id) ){
+			delete global['cache'][table];
+		}
 	}
 
 	return 1;
@@ -56,7 +64,7 @@ jQuery.fn.fillTable = function(){
 		for( var i = 0; i < controller.cellCount; i++ ){
 			controller[i] = {};
 
-			var args = headerRow.eq(i).attr("data-modal").split("|");
+			var args = headerRow.eq(i).attr("data-model").split("|");
 
 			controller[i]["modal"] = args[0];
 
@@ -64,6 +72,10 @@ jQuery.fn.fillTable = function(){
 				controller[i]["format"] = "str";
 			else
 				controller[i]["format"] = args[1];
+
+			if( args[2] !== undefined ){
+				controller[i]['args'] = args[2];
+			}
 		}
 	}
 	else{
@@ -83,19 +95,19 @@ jQuery.fn.fillTable = function(){
 				modal = null,
 				data = null;
 
-				//source[i][controller[j]['modal']] == undefined ? controller[j]['modal'] : source[i][controller[j]['modal']]
-
 				if( source[i][controller[j]['modal']] == undefined && controller[j]['format'] !== "eval"  ){
 					modal = controller[j]['modal'];
 				}
-				else if( controller[j]['format'] === "eval" ){
+				else if( controller[j]['format'] === "eval"){
 					var s = tableId + "&&" + j;
 					modal = [ s, controller[j]['modal'], source[i] ]
 				}
 				else{
 					modal = source[i][controller[j]['modal']];
 				}
+
 				data = format( modal );
+
 			if( typeof(data) !== "object"){
 				cell.innerHTML = data ;
 			}
@@ -107,11 +119,22 @@ jQuery.fn.fillTable = function(){
 		tbody.appendChild(row[0]);
 	}
 
+	var tfoot = this.find("tfoot")
+
+	if( tfoot.find("[data-model]").length > 0 ){
+		var	c = tfoot.find("[data-model]"),
+			fn = c.attr("data-model").split("|")[1],
+			model = c.attr("data-model").split("|")[0];
+
+		var result = global[fn]( tableId, model );
+
+		c.html( result );
+	}
+
 	if( this.attr("data-sortable") == "true" && source != undefined && source.length > 0 )
 		this.DataTable();
-
-	log("Table Loaded Sucessfully");
-	return;
+	
+	return 1;
 }
 
 jQuery.fn.getFormSettings = function(){
@@ -138,7 +161,9 @@ jQuery.fn.getFormSettings = function(){
     };
 }
 
+
 jQuery.fn.setReadOnly = function(){
+	//Make all input and Text Area Readonly
 	this.find("input, textarea").each(function(){
 		jQuery(this).attr("readonly", "readonly");
 	});

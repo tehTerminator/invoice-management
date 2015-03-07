@@ -22,8 +22,7 @@
 	</div>
 
 	<div class="ui basic segment">
-		<?php include_once 'invoiceTable.php' ?>
-		<?php include 'invoiceForm.php' ?>
+		
 	</div>
 
 </div>

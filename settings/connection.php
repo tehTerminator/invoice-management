@@ -2,7 +2,7 @@
 	define('LOCALHOST', "localhost");
 	define('USERNAME', 'root');
 	define('PASSWORD', '');
-	define('DATABASE', 'inv');
+	define('DATABASE', 'masterApp');
 
 	$connectionString = sprintf("mysql:host=%s;dbname=%s", LOCALHOST, DATABASE);
 

@@ -125,17 +125,6 @@ function selectBtnPress(me){
 	jQuery("#" + next).find(target).each(function(){
 		jQuery(this).updateForm();
 	});
-
-	var step = jQuery(me).closest("[data-step]");
-
-	if( step[0] !== undefined ){
-		step = step.attr("data-step");
-		var stepId = step.substr(0, step.length-1),
-			index = Number(step.substr(step.length-1, 1));
-
-		jQuery("#" + stepId).find(".step").eq(index).removeClass("active").addClass("completed");
-		jQuery("#" + stepId).find(".step").eq(index + 1).removeClass("disabled").addClass("active");
-	}
 }
 
 

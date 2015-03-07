@@ -19,9 +19,6 @@
 
 						<div class="ui large indeterminate text loader" id="task">Please Wait While We Load Things Up.</div>
 
-						<!--
-						<div class="ui large indeterminate text loader">Completed <span id="completed">0</span> out of  <span id="totalTask">0</span> Tasks</div>
-						-->
 
 					</div>
 
@@ -29,10 +26,7 @@
 					<div id="main" class="ui segment">
 
 
-
 					</div>
-
-
 
 				</main>
 
