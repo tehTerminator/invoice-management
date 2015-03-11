@@ -15,8 +15,10 @@
 
 
 	function isMulti($arr){
-		foreach($arr as $a){
-			if( is_array($a) ) return true;
+		if( is_array($arr) ){
+			foreach($arr as $a){
+				if( is_array($a) ) return true;
+			}
 		}
 		return false;
 	}

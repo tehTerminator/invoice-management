@@ -1,32 +1,38 @@
 var global = {
 	"format" : {
-		"str" : function( s ){ return s; },
- 		"currency" : function( n ){ return "<i icon rupee></i>" + Number(n).toFixed(2); },
- 		"deleteBtn" : function( event ){
-			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":event+"(this)"});
+		"str" : function( arg ){ return arg.data; },
+ 		"currency" : function( arg ){ return "<i class='icon rupee'></i>" + Number(arg.data).toFixed(2); },
+ 		"deleteBtn" : function( arg ){
+			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":arg.data+"(this)"});
 			delBtn.append( createElement({"tag": "i", "class":"icon remove"}));
 			return delBtn[0];
 		},
-		"selectBtn" : function( event ){
-			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":event+"(this)"});
+		"selectBtn" : function( arg ){
+			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":arg.data+"(this)"});
 			editBtn.append( createElement({"tag": "i", "class":"icon arrow right"}) );
 			return editBtn[0];
 		},
-		"checkmark" : function(n){
+		"checkmark" : function(arg){
 			var i = createElement({"tag": "i", "class":"icon"});
-			if( n == 1 )
+			if( arg.data == 1 )
 				i.addClass("checkmark");
 			else
 				i.addClass("remove");
 
 			return i[0];
 		},
-		"decimal" : function( n ){ return Number(n).toFixed(2); },
-		"eval" : function(args){
-			var sourceTable = args[0],
-				expression = args[1],
-				symbolTable = args[2],
-				hasVariable = false;
+		"decimal" : function( arg ){ return Number(arg.data).toFixed(2); },
+		"eval" : function(arg){
+			var sourceTable = arg.location,
+				expression = arg.data,
+				symbolTable = arg.source,
+				hasVariable = false,
+				variable = null;
+
+			if( has(expression, "=") ){
+				variable = arg.data.split("=")[0];
+				expression = arg.data.split("=")[1];
+			}
 
 			var tokens = tokanize( sourceTable, expression )
 				i = 0,
@@ -38,7 +44,7 @@ var global = {
 				for( var b in global.cache[ sourceTable ]['var_index'] ){
 					tokens[b] = symbolTable[ tokens[b] ];
 				}
-				//Replace ',' in equation so that they can be evaluated.
+				//Replace ',' in equation so that expression can be evaluated.
 				eq = tokens.join().replace(/,/g,"");
 			}
 			else{
@@ -55,14 +61,28 @@ var global = {
 				}
 			}
 
-			if( global['cache'][sourceTable]['total'] === undefined ){
-				global['cache'][sourceTable]['total'] = eval( eq );
-			}
-			else{
-				global['cache'][sourceTable]['total'] = Number(global['cache'][sourceTable]['total']) + eval(eq);
-			}
+			var answer = eval(eq);
 
-			return eval( eq );
+			if( variable !== null ) symbolTable[variable] = answer;
+
+			if( arg['format2'] !== undefined ) 
+				return global['format'][arg['format2']]( {"data":answer} );
+
+			return answer;
+		},
+		"query" : function(arg){
+			var expression = arg.data,
+				symbolTable = arg.source,
+				variable = expression.split("_")[1],
+				target = expression.split("_")[0],
+				id = symbolTable[target + "_id"];
+
+			symbolTable[variable] = global[target + "s"]["hash"][id][variable];
+
+			if( arg['format2'] !== undefined ) 
+				return global['format'][arg['format2']]( {"data":symbolTable[variable]} );
+
+			return symbolTable[variable]
 		}
 	},
 	"server" : {
@@ -143,9 +163,7 @@ var global = {
 	"templateRows" : {
 
 	},
-	"message" : {
-
-	},
+	"messages" : {},
 	"clearCachedData" : function( target ){
 		global[target].data = [];
 		global[target].hash = {};
@@ -155,8 +173,19 @@ var global = {
 		"lastIndex" : 0
 	},
 	"getIndex" : function(){ return global.cache.lastIndex++; },
-	"sum" : function( tableId, variable ){
-		variable = Number(variable.slice(3)) - 1;
-		return global['cache'][tableId + "&&" + variable]['total'];
+	"sum" : function( arg ){
+		source = arg.source;
+		var total = 0,
+		len = source.length,
+		i = 0;
+
+		for(i = 0; i < len; i++){
+			total += Number(source[i][arg['data']]);
+		}
+
+		if( arg['format2'] !== undefined ) 
+			return global['format'][arg['format2']]( {"data":total} );
+
+		return total;
 	}
 };

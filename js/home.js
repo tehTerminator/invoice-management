@@ -17,5 +17,9 @@ jQuery(document).ready(function(){
 	jQuery("nav > a").eq(0).addClass("active");
 
 	jQuery(".ui.sticky").sticky();
+
+	jQuery("#smallModal").modal({
+		closable : false
+	});
 });
 

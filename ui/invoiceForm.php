@@ -1,6 +1,6 @@
 <div class="row">
 
-	<div id="addInvoiceForm" class="ui form segment" data-action="php/addData.php?t=invoices" data-validation='true'>
+	<form id="addInvoiceForm" class="ui form segment" data-action="php/addData.php?t=invoices" data-validation='true' data-success="readOnly">
 
 		<div class="row">
 			<div class="ui header">Customer Information</div>
@@ -42,13 +42,10 @@
 				</div>
 			</div>
 
-			<div class="field">
-				<button id="addRowBtn" class="ui blue button" tabindex="3">Add Data</button>
-			</div>
-
+		
 		</div>
 
-	</div>
+	</form>
 
 </div>
 
@@ -56,8 +53,8 @@
 
 	<div id="addTransactionsForm" action="" class="ui form segment" data-validation="true">
 
-		<div class="ui five fields">
-			<div class="field">
+		<div class="ui six fields">
+			<div class="six wide field">
 				<label for="Product">Product</label>
 				<div class="ui fluid upward selection search dropdown" data-source="products">
 					<input id="product_id" type="hidden" name="product_id" onchange="updateRow(this)">
@@ -69,24 +66,30 @@
 				</div>
 			</div>
 
-			<div class="field">
+			<div class="two wide field">
 				<label for="rate">Rate</label>
 				<input id="rate" value="0" type="number" readonly tabindex="-1">
 			</div>
 
-			<div class="field">
+			<div class="two wide field">
 				<label for="quantity">Quantity</label>
 				<input id="quantity" name="quantity" type="number" value="0" min="0" onchange="updateAmount()" tabindex="1">
 			</div>
 
-			<div class="field">
+			<div class="two wide field">
 				<label for="discount">Discount</label>
 				<input id="discount" name="discount" value="0" min="0" max="99" type="number" onchange="updateAmount()" tabindex="2">
 			</div>
 
-			<div class="field">
+			<div class="two wide field">
 				<label for="amount">Amount</label>
 				<input id="amount" name="amount" min="0" type="number" readonly tabindex="-1">
+			</div>
+
+			<div class="two wide field">
+				<label for="addRowBtn">Add Row</label>
+				<button id="addRowBtn" class="ui fluid icon blue button" tabindex="3"><i class="plus icon"></i></button>
+
 			</div>
 
 		</div>

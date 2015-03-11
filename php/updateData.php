@@ -11,6 +11,6 @@
 	unset($_POST['id']);
 
 	$myObject->updateData($_POST, 'id = ' . $id );
-	$myObject->execute();
-	
-	echo "Sucessfully Updated Data";
+	$myObject->executeQuery();
+
+	echo "Successfully Updated Data";

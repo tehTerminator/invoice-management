@@ -22,7 +22,8 @@
 	</div>
 
 	<div class="ui basic segment">
-		
+		<?php $table_id="invoiceTable"; ?>
+		<?php include 'invoiceTable.php' ?>
 	</div>
 
 </div>

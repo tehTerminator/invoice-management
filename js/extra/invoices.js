@@ -1,5 +1,5 @@
 jQuery("document").ready(function(){
-	autoload(['customers|0|name.ASC', 'products|0|name.ASC', 'invoices']);
+	autoload(['customers', 'products|0|name.ASC', 'invoices']);
 	executeTasks( [fillDropdown, moreEvents] );
 	executeTasks( global.tasks );
 });
@@ -23,18 +23,19 @@ function updateAmount(){
 
 function moreEvents(){
 
-	setTask("More Events")
+	setTask("More Events");
 
 	jQuery("#postInvoiceBtn").on('click', function(){
-		//Add Data and Change Frame
-		jQuery("#invoiceStep").find(".step").eq(1).removeClass("active").addClass("completed");
-		jQuery("#invoiceStep").find(".step").eq(2).addClass("active");
-		jQuery("#invoices").hide();
-		jQuery("#transactions").slideDown();
-		setTimeout(function(){
-			//Wait till Data is updated and then retrieve Data
+		
+		if( global['transactions']['data'].length == 0 ) return false;
 
-		}, 1000);
+		var header = "Do you want to post Invoice";
+		var statement = '<i class="icon warning"></i>Warning, this command will be irreversible and you wont be able to post any more transactions to the invoice. If you still want to add more Transactions please click Cancel, or Proceed by clicking Okay Button'
+
+		feedback(header, statement, function(){
+			setTask("Please Wait While We Post Transactions");
+			executeTasks(['jQuery("#addInvoiceForm").form("submit");', postTransactions]);
+		});
 	});
 
 	jQuery("#addRowBtn").on('click', function(){
@@ -42,29 +43,34 @@ function moreEvents(){
 			quantity = jQuery("#quantity").val(),
 			discount = jQuery("#discount").val();
 
+		var transactions = global['transactions']
+
 		//If Products are not already available in Transaction then Add Product
-		if( global['transactions']['hash'][product_id] !== undefined ){
-			global['transactions']['hash'][product_id]["quantity"] = Number(quantity) + Number(global['transactions']['hash'][product_id]["quantity"]);
-			global['transactions']['hash'][product_id]["discount"] = Number(discount);
+		if( transactions['hash'][product_id] !== undefined ){
+			transactions['hash'][product_id]["quantity"] = Number(quantity) + Number(transactions['hash'][product_id]["quantity"]);
+			transactions['hash'][product_id]["discount"] = Number(discount);
 		}
 		else{
 			//Update Quantity
-			global['transactions']['hash'][product_id] = {
+			transactions['hash'][product_id] = {
 				'quantity' : quantity,
 				'discount' : discount
 			};
 		}
 
 		//Recreate the list of Transactions from Hash Map
-		global.transactions.data = [];
+		transactions.data = [];
 		for(var pid in global.transactions.hash){
 			global.transactions.data.push({
 				"product_id" 	: pid,
+				"quantity" 		: transactions['hash'][pid]['quantity'],
+				"discount" 		: transactions['hash'][pid]['discount']
+			});
+
+			/*
 				"product_name" 	: global['products']['hash'][pid]['name'],
 				"rate" 			: global['products']['hash'][pid]['rate'],
-				"quantity" 		: global['transactions']['hash'][pid]['quantity'],
-				"discount" 		: global['transactions']['hash'][pid]['discount']
-			});
+			*/
 		}
 
 		//Recreate Data in Table
@@ -93,4 +99,23 @@ function removeTransaction(element){
 
 	table.clearTable();
 	table.fillTable();
+}
+
+function postTransactions(){
+
+	var invoice_id = global.message.lastInsertId
+
+	//Add Invoice Id to Transactions
+	for(var t in global.transactions.data){
+		global['transactions']['data'][t]['invoice_id'] = invoice_id;
+	}
+
+	jQuery.post("php/addData.php?t=transactions", {0:global.transactions.data}, function(data){
+		try{
+			global.message = JSON.parse(data)
+		}
+		catch(e){
+			global.message = data;
+		}
+	});
 }

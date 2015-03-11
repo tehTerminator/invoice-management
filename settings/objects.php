@@ -1,44 +1,49 @@
 <?php
 	include_once ROOT_DIR . "/functions.php";
 
+	$log = "object_log.txt";
+
 	class table{
 
 		private $name;
-		private $dataRow;
+		public $dataRow;
 		private $db;
 		public $query;
 		private $stmt;
 		private $output;
+		private $columnNames;
 
 
 		function __construct($db, $tableName){
 			$this->db = $db;
 			$this->name = $tableName;
+
+			$this->getColumnName();
+
+			foreach($this->output as $row){
+				$this->columnNames[] = $row['column_name'];
+			}
 		}
 
 		function insertRow($input){
 
-			$data = $this->filterData($input);
+			$input = $this->filterData($input);
 
-			$this->query = "INSERT INTO $this->name(". implode(",", array_keys($data))  . ") VALUES";
-
-			if( isMulti($data) ){
-				$arr = array_fill(0, count($data[0], "?") );
-				$placeHolder = "(" . implode(", ", $arr ) . ")";
-				$combinedArray = array();
-				foreach( $data as $arr ){
-					$placeHolderArray[] = $placeHolder;
-					$combinedArray[] = array_values($arr);
-				}
-				$this->query .= implode(", ", $placeHolderArray);
-				$this->dataRow = $combinedArray;
+			if( isMulti($input) ){
+				$colName = array_keys($input[0]);
 			}
 			else{
-				$arr = array_fill(0, count($data), "?" );
-				$placeHolder = "(" . implode(", ", $arr ) . ")";
-				$this->query .= $placeHolder;
-				$this->dataRow = array_values($data);
+				$colName = array_keys($input);
 			}
+
+			$this->query = "INSERT INTO $this->name(" . implode(", ", $colName) . ") VALUES (";
+
+			foreach($colName as &$col){
+				$col = ":" . $col;
+			}
+
+			$this->query .= implode(", ", $colName) . ")";
+			$this->dataRow = $input;
 
 		}
 
@@ -50,7 +55,7 @@
 
 			foreach($data as $column=>$val){
 				$a[] = $column . " = :" . $column;
-				$this->dataRow[':' . $column] = $column;
+				$this->dataRow[':' . $column] = $val;
 			}
 
 			$this->query .= implode(", ", $a) . " WHERE $condition";
@@ -96,7 +101,15 @@
 
 			try {
 				$this->stmt = $this->db->prepare($this->query);
-				$this->stmt->execute( $this->dataRow );
+				
+				if( isMulti($this->dataRow) ){
+					foreach($this->dataRow as $row)
+						$this->stmt->execute($row);
+				}
+				else{
+					$this->stmt->execute( $this->dataRow );
+				}					
+
 				$this->output = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 				$this->query = "";
 			} catch (PDOException $e) {
@@ -110,16 +123,27 @@
 		}
 
 		function filterData($data){
-			$this->getColumnName();
 			$output = array();
 
 			foreach($this->output as $row){
 				$output[] = $row['column_name'];
 			}
 
-			$difference = array_diff( array_keys($data), $output );
-			foreach($difference as $diff){
-				unset( $data[$diff] );
+
+
+			if( isMulti($data) ){
+				$difference = array_diff(array_keys($data[0]), $output);
+				foreach($difference as $diff){
+					foreach($data as &$d){
+						unset( $d[$diff] );
+					}
+				}
+			}
+			else{
+				$difference = array_diff(array_keys($data), $output);
+				foreach($difference as $diff){
+					unset( $data[$diff] );
+				}
 			}
 
 			return $data;

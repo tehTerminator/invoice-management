@@ -50,12 +50,9 @@ function initTabs(){
 			jQuery(this).parent()
 				.next(".ui.bottom.attached.segment")
 				.children(".ui.basic.segment").hide()
-				.eq(index).slideDown('slow');
+				.eq(index).fadeIn('slow');
 		}
 
-		if( jQuery(this).attr("data-action") !== undefined ){
-			home['actions'][ jQuery(this).attr("data-action") ]();
-		}
 
 		//Activate the Menu
 		jQuery(this).parent()
@@ -179,14 +176,18 @@ function log( message ){
 
 function createElement( s ){
 	"use strict";
-	var a = jQuery( document.createElement(s.tag));
-	a.html( s["html"] );
-	a.addClass( s["class"] )
-	delete s["tag"];
-	delete s["html"];
-	delete s["class"];
+	var a = jQuery( document.createElement(s.tag) );
+	delete s['tag'];
 	for( var attr in s ){
-		a.attr(attr, s[attr] );
+		if( attr === "class" ){
+			a.addClass( s['class'] );
+		}
+		else if( attr === "html" ){
+			a.html( s['html'] );
+		}
+		else{
+			a.attr( attr, s[attr] );
+		}
 	}
 
 	return a;
@@ -219,12 +220,19 @@ function fillDropdown(){
 	});
 }
 
+function feedback(header, statement, fn){
+	jQuery("#modalContent").html( statement );
+	jQuery("#modalHeader").html( header );
+	jQuery("#smallModal").modal({ onApprove: fn });
+	jQuery("#smallModal").modal('show');
+}
+
 function fillAllTables(){
 	"use strict";
 
 	setTask("Inserting Data in Tables.");
 
-	jQuery(".ui.table.segment").each(function(){
+	jQuery(".ui.table").each(function(){
 		"use strict";
 		if( jQuery(this).attr("data-type") == "autoFill" ){
 			jQuery(this).fillTable();
@@ -235,19 +243,21 @@ function fillAllTables(){
 function executeTasks( list ){
 	"use strict";
 
+	//Wait until Queue Is Empty
 	if( global['server']['isRunning'] ){
 		setTimeout( function(){
 			executeTasks( list );
 		}, 1000);
 	}
 	else{
+		//Push Task inside Queue
 		for( var i =0; i < list.length ; i++ ){
 			global['server']['queue'].unshift(list[i]);
 		}
 		global['server']['execute']();
 	}
 
-	global['server']['totalTasks'] = global['server']['queue'].length;
+	//global['server']['totalTasks'] = global['server']['queue'].length;
 }
 
 function initDynamicTables(){
@@ -300,7 +310,9 @@ function initDynamicTables(){
 }
 
 function crunchData( source ){
-	for( var i = 0; i < source.data.length; i++ ){
+	var len = global[source]['data'].length;
+	source = global[source];
+	for( var i = 0; i < len; i++ ){
 		source['hash'][source.data[i].id] = source.data[i];
 	}
 }
@@ -316,30 +328,39 @@ function load( arg ){
 	if( source.createdOn !== undefined && currentTime - source.createdOn < 120000 )
 		return;
 
+	if( arg[1] !== undefined )
+		param['limit'] = arg[1];
+	if( arg[2] !== undefined ){
+		var arg2 = arg[2].split(".");
+		param['orderby'] = arg2[0];
+		param['ordertype'] = arg2[1];
+	}
+	if( arg[3] !== undefined )
+		param['condition'] = arg[3];
+
 	setTask("Loading " + arg[0].toUpperCase());
 
 	jQuery.ajax({
 			url: link,
 			type: 'get',
-			data: {
-				'limit' : arg[1] == undefined ? 0 : arg[1],
-				'orderby' : arg[2] == undefined ? "name" : arg[2].split(".")[0],
-				'ordertype' : arg[2] == undefined ? "DESC" : arg[2].split(".")[1],
-				'id' : arg[3] == undefined ? "" : arg[3]
-			},
+			data: param,
 			success: function (data) {
-				source['data'] = JSON.parse(data);
-				setTimeout( function(){
-					crunchData( source );
-				}, 2000)
+				try{
+					source['data'] = JSON.parse(data);
+				}
+				catch(e){ source['data'] = data }
 			}
 		});
+
+	setTimeout(function(){
+		crunchData( arg[0] );
+	}, 2000);
 
 	source.createdOn = currentTime;
 }
 
 function autoload(arg){
-	var q = []
+	var q = [];
 	for(var i=0; i<arg.length;i++){
 		q.unshift( "load('" + arg[i] + "')" );
 	}
@@ -363,15 +384,16 @@ function tokanize( src, expression ){
         i = 0,
         operators = "+-*/()",
         characters = "abcdefghijklmnopqrstuvwxyz_-0123456789.",
-        symbol = "";
+        symbol = "",
+        len = expression.length;
 
-    for(i = 0; i < expression.length; i++){
+    for(i = 0; i < len; i++){
     	var c = expression[i];
     	if( has(operators, c)  ){
     		stack1.push(c);
     	}
     	else if( has(characters, c) ){
-    		while( !( has(operators,c) || c === ")" || i === expression.length ) ){
+    		while( !( has(operators,c) || c === ")" || i === len ) ){
     			symbol += c;
     			c = expression[++i];
     		}
@@ -394,3 +416,4 @@ function tokanize( src, expression ){
 function has( some_string, character){
 	return some_string.indexOf(character) !== -1
 }
+

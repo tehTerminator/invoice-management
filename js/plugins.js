@@ -70,11 +70,12 @@ jQuery.fn.fillTable = function(){
 
 			if( args[1] == undefined )
 				controller[i]["format"] = "str";
-			else
+			else{
 				controller[i]["format"] = args[1];
+			}
 
 			if( args[2] !== undefined ){
-				controller[i]['args'] = args[2];
+				controller[i]['format2'] = args[2];
 			}
 		}
 	}
@@ -91,19 +92,18 @@ jQuery.fn.fillTable = function(){
 		row.attr("data-index", i);
 		for(var j=0; j < controller["cellCount"]; j++){
 			var cell = document.createElement("td"),
-				format = global.format[controller[j]['format']],
-				modal = null,
+				format = global['format'][controller[j]['format']],
+				modal = {},
 				data = null;
 
-				if( source[i][controller[j]['modal']] == undefined && controller[j]['format'] !== "eval"  ){
-					modal = controller[j]['modal'];
-				}
-				else if( controller[j]['format'] === "eval"){
-					var s = tableId + "&&" + j;
-					modal = [ s, controller[j]['modal'], source[i] ]
-				}
-				else{
-					modal = source[i][controller[j]['modal']];
+				modal['data'] = source[i][controller[j]['modal']] === undefined ? controller[j]['modal'] : source[i][controller[j]['modal']];
+				modal['source'] = source[i];
+				modal['location'] = tableId + "&&" + j;
+
+				if( controller[j]['format2'] !== undefined ){
+					if( has(["str", "currency", "decimal"], controller[j]['format2'] ) ){
+						modal['format2'] = controller[j]['format2'];
+					}
 				}
 
 				data = format( modal );
@@ -124,9 +124,16 @@ jQuery.fn.fillTable = function(){
 	if( tfoot.find("[data-model]").length > 0 ){
 		var	c = tfoot.find("[data-model]"),
 			fn = c.attr("data-model").split("|")[1],
-			model = c.attr("data-model").split("|")[0];
+			variable = c.attr("data-model").split("|")[0];
 
-		var result = global[fn]( tableId, model );
+		var arg = {};
+
+		arg['model'] = fn;
+		arg['data'] = variable;
+		arg['format2'] = c.attr("data-model").split("|")[2];
+		arg['source'] = source;
+
+		var result = global[fn](arg);
 
 		c.html( result );
 	}
@@ -149,7 +156,13 @@ jQuery.fn.getFormSettings = function(){
         onSuccess: function() {
             var data = myForm.serialize();
             jQuery.post(link, data, function(d) {
-                global.message = JSON.parse(d);
+            	try{
+            		global.message = JSON.parse(d);
+            	}
+            	catch(e){
+            		global.message = d;
+            	}
+                
                 if( myForm.attr("data-success") === "reset" || myForm.attr("data-success") === undefined )
                 	myForm[0].reset();
                 else

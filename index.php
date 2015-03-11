@@ -30,6 +30,25 @@
 
 				</main>
 
+				<div class="ui small modal" id="smallModal">
+					
+					<i class="inverted red circular close icon"></i>
+					<div class="header" id="modalHeader">Basic Modal For FeedBack</div>
+					<div class="content">
+						
+						<div class="description" id="modalContent">Description</div>
+
+					</div>
+
+					<div class="actions">
+						
+						<button class="ui negative button" id="modalCancelBtn">Cancel</button>
+						<button class="ui positive button" id="modalOkayBtn">Okay</button>
+
+					</div>
+
+				</div>
+
 
 			</div>
 
