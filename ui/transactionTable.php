@@ -1,7 +1,7 @@
 <!--Once the Data is udpated The Results Will Be Shown in this Table-->
 <div class="ui segment">
 
-	<table id="<?php echo $id; ?>"class="ui celled striped very compact table" data-type="autoFill" data-source="transactions">
+	<table id="<?php echo $table_id; ?>"class="ui celled striped very compact table" data-type="autoFill" data-source="transactions">
 		<thead>
 			<tr>
 				<th data-model="product_name|query">Product Name</th>
@@ -9,7 +9,7 @@
 				<th data-model="quantity">Quantity</th>
 				<th data-model="discount|decimal">Discount</th>
 				<th data-model="amount=(quantity * rate)*(1-discount/100)|eval|currency">Amount</th>
-				<th data-model="removeTransaction|deleteBtn">Del</th>
+				<th data-model="removeTransaction(this)|deleteBtn">Del</th>
 			</tr>
 		</thead>
 

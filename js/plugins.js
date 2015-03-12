@@ -1,24 +1,53 @@
 jQuery.fn.updateForm = function(){
 	"use strict";
 
-	var input = this.find("[name]"),
+	if( this.attr("data-source") === undefined ){
+		var fields = jQuery(this).find("[data-source]");
+
+		fields.each(function(){
+
+			var input = jQuery(this).find("[name]"),
+			source = global[this.attr("data-source")];
+
+			input.each(function(){
+				jQuery(this).updateField(source);
+			});
+
+		});
+		fields.each(function(){
+			global['clearSelected']( jQuery(this).attr("data-source") );
+		});
+	}
+	else{
+		var inputs = jQuery(this).find("[name]"),
 		source = global[this.attr("data-source")];
 
-	input.each(function(index){
-		"use strict";
-		var modal = jQuery(this).attr("name");
-		if( modal.indexOf("_") >= 0 )
-			modal = modal.split("_")[1]
-		if( jQuery(this).attr("type") == "checkbox" ){
-			var parent = jQuery(this).closest(".ui.checkbox");
-			if( source.data[ source['selectedIndex'] ][modal] == 1 ){
-				parent.checkbox("check");
-			}
-		}
-		jQuery(this).val( source.data[ source['selectedIndex'] ][modal] );
-	});
+		inputs.each(function(){
+			jQuery(this).updateField(source);
+		});
+
+		global['clearSelected'](jQuery(this).attr("data-source"));
+	}
+
+
 
 	return 1;
+}
+
+jQuery.fn.updateField = function(source){
+	"use strict";
+	if( source['selectedIndex'] < 0) return;
+
+	var modal = this.attr("name");
+	if( modal.indexOf("_") >= 0 )
+		modal = modal.split("_")[1]
+	if( jQuery(this).attr("type") === "checkbox" ){
+		var parent = jQuery(this).closest(".ui.checkbox");
+		if( source.data[ source['selectedIndex'] ][modal] == 1 ){
+			parent.checkbox("check");
+		}
+	}
+	this.val( source.data[ source['selectedIndex'] ][modal] );
 }
 
 jQuery.fn.clearTable = function(){

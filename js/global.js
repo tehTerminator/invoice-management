@@ -3,12 +3,12 @@ var global = {
 		"str" : function( arg ){ return arg.data; },
  		"currency" : function( arg ){ return "<i class='icon rupee'></i>" + Number(arg.data).toFixed(2); },
  		"deleteBtn" : function( arg ){
-			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":arg.data+"(this)"});
+			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":arg.data});
 			delBtn.append( createElement({"tag": "i", "class":"icon remove"}));
 			return delBtn[0];
 		},
 		"selectBtn" : function( arg ){
-			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":arg.data+"(this)"});
+			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":arg.data});
 			editBtn.append( createElement({"tag": "i", "class":"icon arrow right"}) );
 			return editBtn[0];
 		},
@@ -77,12 +77,12 @@ var global = {
 				target = expression.split("_")[0],
 				id = symbolTable[target + "_id"];
 
-			symbolTable[variable] = global[target + "s"]["hash"][id][variable];
+			symbolTable[expression] = global[target + "s"]["hash"][id][variable];
 
 			if( arg['format2'] !== undefined ) 
-				return global['format'][arg['format2']]( {"data":symbolTable[variable]} );
+				return global['format'][arg['format2']]( {"data":symbolTable[expression]} );
 
-			return symbolTable[variable]
+			return symbolTable[expression]
 		}
 	},
 	"server" : {
@@ -187,5 +187,24 @@ var global = {
 			return global['format'][arg['format2']]( {"data":total} );
 
 		return total;
+	},
+	"clearSelected" : function( location ){
+		global[location]['selectedIndex'] = -1;
+	},
+	"makeSelection" : function( location, index ){
+		global[location].selectedIndex = index;
+		var selected = global[location]['data'][index];
+		for( var key in selected ){
+			if( has(key, "id") && has(key, "_") ){
+				var target, targetObj, targetIndex;
+				
+				target = key.split("_")[0] + "s";
+				targetObj = global[location]["hash"][selected[key]];
+				targetIndex = targetObj['index'];
+
+				global.makeSelection( target, targetIndex );
+			}
+		}
+		return;
 	}
 };

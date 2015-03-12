@@ -4,6 +4,24 @@ jQuery("document").ready(function(){
 	executeTasks( global.tasks );
 });
 
+function selectInvoice( element ){
+	"use strict";
+	var index = jQuery(element).closest("tr").attr("data-index"),
+		table = jQuery(element).closest("table")
+		source = global[table.attr("data-index")],
+		parent = table.closest("[data-next]"),
+		next = jQuery("#" + parent.attr("data-next"));
+
+	source['selectedIndex'] = index;
+	parent.hide();
+	next
+}
+
+function loadTransactions(){
+	return;
+}
+
+//Change Rate in Row
 function updateRow( element ){
 	"use strict";
 	var rate = global['products']['hash'][element.value]['rate'];
@@ -11,6 +29,7 @@ function updateRow( element ){
 	updateAmount();
 }
 
+//Update Amount in Row;
 function updateAmount(){
 	"use strict";
 	var rate = jQuery("#rate").val(),
@@ -21,6 +40,8 @@ function updateAmount(){
 	jQuery("#amount").val( amt );
 }
 
+
+//Bind Events after Some Elements are created
 function moreEvents(){
 
 	setTask("More Events");

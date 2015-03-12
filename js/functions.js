@@ -116,14 +116,14 @@ function selectBtnPress(me){
 
 	jQuery(me).closest("[data-next]").hide();
 	jQuery("#" + next).fadeIn('slow');
-	source.selectedIndex = index;
+	
+	global['makeSelection']( target, index );
 
 	target = "[data-source='" + target + "']";
 	jQuery("#" + next).find(target).each(function(){
 		jQuery(this).updateForm();
 	});
 }
-
 
 function initForms(){
 	"use strict";
@@ -314,6 +314,7 @@ function crunchData( source ){
 	source = global[source];
 	for( var i = 0; i < len; i++ ){
 		source['hash'][source.data[i].id] = source.data[i];
+		source['hash'][source.data[i].id]['index'] = i;
 	}
 }
 

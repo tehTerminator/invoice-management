@@ -5,8 +5,8 @@
 			<th data-model="name">Name</th>
 			<th data-model="company">Company</th>
 			<th data-model="address">Address</th>
-			<th data-model="selectBtnPress|selectBtn">Sel</th>
-			<th data-model="deleteRecord|deleteBtn">Del</th>
+			<th data-model="selectBtnPress(this)|selectBtn">Sel</th>
+			<th data-model="deleteRecord(this)|deleteBtn">Del</th>
 		</tr>
 	</thead>
 	<tbody>
