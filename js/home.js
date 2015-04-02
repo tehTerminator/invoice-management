@@ -1,20 +1,23 @@
 jQuery(document).ready(function(){
-	jQuery("nav > a").click(function(){
-		showMainLoader();
-		var link = "ui/" + jQuery(this).attr("data-link");
-		jQuery("#main").load( link );
 
-		var s = link.split(".")[0].substr(3) + ".js";
+	jQuery("nav > a").tab({
+		"path" : "ui/",
+		"auto" : true,
+		'onTabLoad' : function(){
+			showMainLoader();
+			var link = document.location.toString().split("/");
+				scriptName = link[link.length - 1];
 
-		jQuery.getScript("js/extra/" + s, function(){
-			log(s + " loaded Sucessfully");
-		});
+			var s = scriptName.split(".")[0] + ".js";
 
-		jQuery("nav > a.active").removeClass("active");
-		jQuery(this).addClass("active");
+			if( s.length > 0 )
+				jQuery.getScript("js/extra/" + s, function(){
+					log(s + " loaded Sucessfully");
+				});
+		},
+		'history' : true,
+		'historyType' : 'hash'
 	});
-
-	jQuery("nav > a").eq(0).addClass("active");
 
 	jQuery(".ui.sticky").sticky();
 

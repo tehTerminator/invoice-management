@@ -199,7 +199,7 @@ var global = {
 				var target, targetObj, targetIndex;
 				
 				target = key.split("_")[0] + "s";
-				targetObj = global[location]["hash"][selected[key]];
+				targetObj = global[target]["hash"][selected[key]];
 				targetIndex = targetObj['index'];
 
 				global.makeSelection( target, targetIndex );

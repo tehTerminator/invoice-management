@@ -5,8 +5,6 @@
 
 			<div class="column">
 
-
-
 				<div class="ui sticky row">
 
 					<?php require_once 'nav.php'; ?>
@@ -15,18 +13,11 @@
 
 				<main class="row">
 
-					<div class="ui dimmer">
-
-						<div class="ui large indeterminate text loader" id="task">Please Wait While We Load Things Up.</div>
-
-
-					</div>
-
-
-					<div id="main" class="ui segment">
-
-
-					</div>
+					<div class="ui bottom attached active tab segment" data-tab="dashboard.php"></div>
+					<div class="ui bottom attached tab segment" data-tab="customers.php"></div>
+					<div class="ui bottom attached tab segment" data-tab="products.php"></div>
+					<div class="ui bottom attached tab segment" data-tab="invoices.php"></div>
+					<div class="ui bottom attached tab segment" data-tab="reports.php"></div>
 
 				</main>
 

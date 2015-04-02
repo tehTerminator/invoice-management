@@ -4,13 +4,12 @@ function setTask( name ){
 
 function showMainLoader(){
 	"use strict";
-	jQuery("main > .ui.dimmer").addClass("active");
+	jQuery(".active.tab").addClass("loading");
 }
 
 function updateLoader(){
 	"use strict";
-	if( ! jQuery("main > .ui.dimmer").hasClass("active") )
-		showMainLoader();
+	
 
 	jQuery("#task").html( global.server.current );
 	// jQuery("#completed").html( global['server']['completedTasks']);
@@ -19,13 +18,7 @@ function updateLoader(){
 
 function hideMainLoader(){
 	"use strict";
-	jQuery("main > .ui.dimmer").removeClass("active");
-}
-
-function loadPage(pageName){
-	"use strict";
-	showMainLoader();
-	jQuery("#main").load(pageName);
+	jQuery(".active.tab").removeClass("loading");
 }
 
 function initTabs(){
@@ -33,34 +26,10 @@ function initTabs(){
 	setTask("Initializing Tabs");
 
 	//Hiding All Tabs other than First Tab
-	jQuery(".ui.tabular.menu")
-		.next(".ui.bottom.attached.segment")
-		.children(".ui.basic.segment:not(:first-child)").hide();
+	jQuery(".ui.tabular.menu .item").tab();
 
-	jQuery(".menu > .item").on('click', function(){
+	jQuery("[data-prev]").hide();
 
-		if( jQuery(this).hasClass("active") ){
-			return;
-		}
-
-		if( jQuery(this).parent().hasClass("tabular") ){
-			//Changes Tab if Tabular Menu item is clicked
-			var index = jQuery(".ui.tabular.menu > a").index( jQuery(this) );
-
-			jQuery(this).parent()
-				.next(".ui.bottom.attached.segment")
-				.children(".ui.basic.segment").hide()
-				.eq(index).fadeIn('slow');
-		}
-
-
-		//Activate the Menu
-		jQuery(this).parent()
-			.children(".active")
-			.removeClass("active");
-		jQuery(this).addClass("active");
-
-	});
 }
 
 function initControls(){
@@ -68,7 +37,7 @@ function initControls(){
 
 	setTask("Initializing Controls")
 
-	jQuery("[data-prev]").hide();
+	
 
 	jQuery(".back.button").on('click', function(){
 			var parent = jQuery(this).closest("[data-prev]"),

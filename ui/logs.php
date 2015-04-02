@@ -1,10 +1,10 @@
 <div class="ui top attached tabular menu">
 
-	<a class="active item">Copier Reading</a>
-	<a class="item">Cash Ledger</a>
-	<a class="item">Cash Details</a>
-	<a class="item">Sales</a>
-	<a class="item">Others</a>
+	<a class="active item" data-tab="">Copier Reading</a>
+	<a class="item" data-tab="">Cash Ledger</a>
+	<a class="item" data-tab="">Cash Details</a>
+	<a class="item" data-tab="">Sales</a>
+	<a class="item" data-tab="">Others</a>
 
 </div>
 <div class="ui bottom attached segment" style="padding:10px 0px 10px 0px">

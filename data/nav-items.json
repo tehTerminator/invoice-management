@@ -5,11 +5,6 @@
 		"icon" : "book"
 	},
 	{
-		"name" : "Log",
-		"link" : "logs.php",
-		"icon" : "pencil"
-	},
-	{
 		"name" : "Customers", 
 		"link" : "customers.php",
 		"icon" : "users"
