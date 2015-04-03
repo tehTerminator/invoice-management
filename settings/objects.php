@@ -1,8 +1,6 @@
 <?php
 	include_once ROOT_DIR . "/functions.php";
 
-	$log = "object_log.txt";
-
 	class table{
 
 		private $name;
@@ -23,6 +21,10 @@
 			foreach($this->output as $row){
 				$this->columnNames[] = $row['column_name'];
 			}
+		}
+
+		function getResult(){
+			return $this->output;
 		}
 
 		function insertRow($input){

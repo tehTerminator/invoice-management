@@ -88,6 +88,8 @@ var global = {
 	"server" : {
 		"queue" : [],
 		"execute" : function(){
+			showMainLoader();
+
 			if( global['server']['queue'].length == 0 ){
 				global['server']['isRunning'] = false;
 				var extraTime = setTimeout( function(){

@@ -88,8 +88,7 @@ function selectBtnPress(me){
 	
 	global['makeSelection']( target, index );
 
-	target = "[data-source='" + target + "']";
-	jQuery("#" + next).find(target).each(function(){
+	jQuery("#" + next).find(['data-source']).each(function(){
 		jQuery(this).updateForm();
 	});
 }
@@ -293,22 +292,24 @@ function load( arg ){
 	arg = arg.split("|");
 	var source = global[arg[0]],
 	link = "php/getData.php?t=" + arg[0],
-	currentTime = new Date();
+	currentTime = new Date(),
+	result = [];
 
 	if( source.createdOn !== undefined && currentTime - source.createdOn < 120000 )
 		return;
 
-	if( arg[1] !== undefined )
-		param['limit'] = arg[1];
-	if( arg[2] !== undefined ){
-		var arg2 = arg[2].split(".");
-		param['orderby'] = arg2[0];
-		param['ordertype'] = arg2[1];
+	for( var i = 1; i < arg.length; i++){
+		if( has(arg[i], "=") ){
+			param[arg[i].split("=")[0]] = arg[i].split("=")[1];
+		} 
+		else if( has(arg[i], ".") ){
+			param['orderby'] = arg[i].split(".")[0];
+			param['ordertype'] = arg[i].split(".")[1];
+		}
+		else {
+			param['limit'] = arg[i];
+		}
 	}
-	if( arg[3] !== undefined )
-		param['condition'] = arg[3];
-
-	setTask("Loading " + arg[0].toUpperCase());
 
 	jQuery.ajax({
 			url: link,

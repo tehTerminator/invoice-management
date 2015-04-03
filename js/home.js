@@ -4,16 +4,16 @@ jQuery(document).ready(function(){
 		"path" : "ui/",
 		"auto" : true,
 		'onTabLoad' : function(){
-			showMainLoader();
 			var link = document.location.toString().split("/");
 				scriptName = link[link.length - 1];
 
 			var s = scriptName.split(".")[0] + ".js";
 
-			if( s.length > 0 )
+			if( has( document.location.href, ".php" ) ){
 				jQuery.getScript("js/extra/" + s, function(){
 					log(s + " loaded Sucessfully");
-				});
+				});				
+			}
 		},
 		'history' : true,
 		'historyType' : 'hash'

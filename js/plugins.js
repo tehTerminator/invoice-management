@@ -9,18 +9,24 @@ jQuery.fn.updateForm = function(){
 			var input = jQuery(this).find("[name]"),
 			source = global[this.attr("data-source")];
 
+			if( source.selectedIndex === -1 ) return;
+
 			input.each(function(){
 				jQuery(this).updateField(source);
 			});
 
 		});
+
 		fields.each(function(){
 			global['clearSelected']( jQuery(this).attr("data-source") );
 		});
+
 	}
 	else{
 		var inputs = jQuery(this).find("[name]"),
 		source = global[this.attr("data-source")];
+
+		if( source.selectedIndex === -1 ) return;
 
 		inputs.each(function(){
 			jQuery(this).updateField(source);
@@ -196,6 +202,7 @@ jQuery.fn.getFormSettings = function(){
                 	myForm[0].reset();
                 else
                 	myForm.setReadOnly();
+
             });
             //Prevent Page Refresh after Posting Data
             return false;
@@ -210,3 +217,4 @@ jQuery.fn.setReadOnly = function(){
 		jQuery(this).attr("readonly", "readonly");
 	});
 }
+

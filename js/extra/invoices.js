@@ -1,5 +1,5 @@
 jQuery("document").ready(function(){
-	autoload(['customers', 'products|0|name.ASC', 'invoices']);
+	autoload(['customers', 'products', 'invoices']);
 	executeTasks( [fillDropdown, moreEvents] );
 	executeTasks( global.tasks );
 });
