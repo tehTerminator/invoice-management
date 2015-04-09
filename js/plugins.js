@@ -1,59 +1,39 @@
 jQuery.fn.updateForm = function(){
 	"use strict";
 
-	if( this.attr("data-source") === undefined ){
+	if( jQuery(this).attr("data-source") === undefined ){
 		var fields = jQuery(this).find("[data-source]");
 
 		fields.each(function(){
-
-			var input = jQuery(this).find("[name]"),
-			source = global[this.attr("data-source")];
-
-			if( source.selectedIndex === -1 ) return;
-
-			input.each(function(){
-				jQuery(this).updateField(source);
-			});
-
+			jQuery(this).updateForm();
 		});
+	} else{
 
-		fields.each(function(){
-			global['clearSelected']( jQuery(this).attr("data-source") );
+		var source = global[jQuery(this).attr("data-source")],
+			locations = jQuery(this).find("[name]");
+
+		locations.each(function(){
+			jQuery(this).updateField( source['data'][ source['selectedIndex'] ] );
 		});
-
 	}
-	else{
-		var inputs = jQuery(this).find("[name]"),
-		source = global[this.attr("data-source")];
-
-		if( source.selectedIndex === -1 ) return;
-
-		inputs.each(function(){
-			jQuery(this).updateField(source);
-		});
-
-		global['clearSelected'](jQuery(this).attr("data-source"));
-	}
-
-
-
-	return 1;
 }
 
 jQuery.fn.updateField = function(source){
 	"use strict";
-	if( source['selectedIndex'] < 0) return;
 
-	var modal = this.attr("name");
-	if( modal.indexOf("_") >= 0 )
-		modal = modal.split("_")[1]
-	if( jQuery(this).attr("type") === "checkbox" ){
-		var parent = jQuery(this).closest(".ui.checkbox");
-		if( source.data[ source['selectedIndex'] ][modal] == 1 ){
-			parent.checkbox("check");
+	try{
+		var modal = this.attr("name");
+		if( jQuery(this).attr("type") === "checkbox" ){
+			var parent = jQuery(this).closest(".ui.checkbox");
+			if( source[modal] == 1 ){
+				parent.checkbox("check");
+			}
 		}
+
+		this.val( source[modal] );	
+	} catch(e){
+		return;
 	}
-	this.val( source.data[ source['selectedIndex'] ][modal] );
 }
 
 jQuery.fn.clearTable = function(){
@@ -77,6 +57,8 @@ jQuery.fn.clearTable = function(){
 
 jQuery.fn.fillTable = function(){
 	"use strict";
+	jQuery(this).clearTable();
+
 	var headerRow = this.children("thead").children("tr").children(),
 	controller = {},
 	tableId = this.attr("id");
@@ -122,11 +104,10 @@ jQuery.fn.fillTable = function(){
 	if( source == undefined || source.length == 0 ) return;
 
 	//Fills data in Table using format stored in controller and data in source
-	for(var i=0; i < source.length; i++){
-		var row = jQuery(document.createElement("tr"));
-		row.attr("data-index", i);
+	for(var i in source){
+		var row = createElement({tag:'tr', 'data-index' : i});
 		for(var j=0; j < controller["cellCount"]; j++){
-			var cell = document.createElement("td"),
+			var cell = createElement({tag:'td'}),
 				format = global['format'][controller[j]['format']],
 				modal = {},
 				data = null;
@@ -143,12 +124,7 @@ jQuery.fn.fillTable = function(){
 
 				data = format( modal );
 
-			if( typeof(data) !== "object"){
-				cell.innerHTML = data ;
-			}
-			else{
-				cell.appendChild( data );
-			}
+			cell.append(data);
 			row.append(cell);
 		}
 		tbody.appendChild(row[0]);
@@ -173,7 +149,7 @@ jQuery.fn.fillTable = function(){
 		c.html( result );
 	}
 
-	if( this.attr("data-sortable") == "true" && source != undefined && source.length > 0 )
+	if( this.attr("data-sortable") == "true")
 		this.DataTable();
 	
 	return 1;
@@ -181,7 +157,7 @@ jQuery.fn.fillTable = function(){
 
 jQuery.fn.getFormSettings = function(){
 	"use strict";
-	var myForm = this,
+	var myForm = jQuery(this),
 	link = myForm.attr("data-action"),
 	blurError = myForm.attr("data-inline") === undefined ? true : false;
 
@@ -197,12 +173,14 @@ jQuery.fn.getFormSettings = function(){
             	catch(e){
             		global.message = d;
             	}
-                
-                if( myForm.attr("data-success") === "reset" || myForm.attr("data-success") === undefined )
-                	myForm[0].reset();
-                else
-                	myForm.setReadOnly();
 
+                myForm[0].reset();
+
+                if( has(link, "add") || has(link, "update") ){
+                	//If Data is added or Updated 
+                	var id = global.message.lastInsertId;
+                	load( link.split("=")[1] + "|id=" + id );
+                }
             });
             //Prevent Page Refresh after Posting Data
             return false;

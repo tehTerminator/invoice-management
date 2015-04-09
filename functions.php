@@ -7,9 +7,9 @@
 		foreach (glob($pattern) as $filename) {
 			# code...
 			if( $extension == "js" )
-				echo "<script type='text/javascript' src='$filename' async></script>";
+				echo "<script type='text/javascript' src='$filename'></script>\n";
 			else
-				echo "<link rel='stylesheet' type='text/css' href='$filename' />";
+				echo "<link rel='stylesheet' type='text/css' href='$filename' />\n";
 		}
 	}
 

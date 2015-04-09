@@ -5,12 +5,12 @@ var global = {
  		"deleteBtn" : function( arg ){
 			delBtn = createElement({"tag" : "button", "class" : "ui red icon delete button", "onclick":arg.data});
 			delBtn.append( createElement({"tag": "i", "class":"icon remove"}));
-			return delBtn[0];
+			return delBtn;
 		},
 		"selectBtn" : function( arg ){
 			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":arg.data});
 			editBtn.append( createElement({"tag": "i", "class":"icon arrow right"}) );
-			return editBtn[0];
+			return editBtn;
 		},
 		"checkmark" : function(arg){
 			var i = createElement({"tag": "i", "class":"icon"});
@@ -19,7 +19,7 @@ var global = {
 			else
 				i.addClass("remove");
 
-			return i[0];
+			return i;
 		},
 		"decimal" : function( arg ){ return Number(arg.data).toFixed(2); },
 		"eval" : function(arg){
@@ -42,6 +42,9 @@ var global = {
 				//if data exist in cache
 				//Might improve performance for equation with many variables
 				for( var b in global.cache[ sourceTable ]['var_index'] ){
+					if( has(tokens[b], "_") ){
+						token[b] = token[b].split("_")[1];
+					}
 					tokens[b] = symbolTable[ tokens[b] ];
 				}
 				//Replace ',' in equation so that expression can be evaluated.
@@ -51,8 +54,7 @@ var global = {
 				global.cache[ sourceTable ]['var_index'] = {};
 				//Replace variables with value
 				//Stores location of variables in cache for further usage
-				for( i = 0; i < tokens.length; i++ ){
-
+				for( i = 0, l = tokens.length; i < l; i++ ){
 					if( symbolTable[ tokens[i] ] !== undefined ){
 						global['cache'][sourceTable]['var_index'][i] = tokens[i];
 						tokens[i] = symbolTable[ tokens[i] ];
@@ -77,12 +79,17 @@ var global = {
 				target = expression.split("_")[0],
 				id = symbolTable[target + "_id"];
 
-			symbolTable[expression] = global[target + "s"]["hash"][id][variable];
+			try{
+				symbolTable[variable] = global[target + "s"]["data"][id][variable];
+			} catch(e){
+				symbolTable[variable] = expression;
+			}
+
 
 			if( arg['format2'] !== undefined ) 
-				return global['format'][arg['format2']]( {"data":symbolTable[expression]} );
+				return global['format'][arg['format2']]( {"data":symbolTable[variable]} );
 
-			return symbolTable[expression]
+			return symbolTable[variable]
 		}
 	},
 	"server" : {
@@ -128,48 +135,15 @@ var global = {
 		initForms,
 		initTabs
 	],
-	"customers" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
-
-	"invoices" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
-
-	"products" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
-
-	"transactions" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
-
-	"accounts" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
-	"copier" : {
-		"data" : [],
-		"selectedIndex" : 0,
-		"hash" : {}
-	},
 	"templateRows" : {
 
 	},
 	"messages" : {},
 	"clearCachedData" : function( target ){
-		global[target].data = [];
-		global[target].hash = {};
-		global[target].selectedIndex = -1;
+		if( global[target] !== undefined ){	
+			global[target]['data'] = {};
+			global[target]['selectedIndex'] = -1;
+		}
 	},
 	"cache" : {
 		"lastIndex" : 0
@@ -181,8 +155,8 @@ var global = {
 		len = source.length,
 		i = 0;
 
-		for(i = 0; i < len; i++){
-			total += Number(source[i][arg['data']]);
+		for( var i in source ){
+			total += Number( source[i][arg['data']] );
 		}
 
 		if( arg['format2'] !== undefined ) 
@@ -193,20 +167,42 @@ var global = {
 	"clearSelected" : function( location ){
 		global[location]['selectedIndex'] = -1;
 	},
-	"makeSelection" : function( location, index ){
-		global[location].selectedIndex = index;
-		var selected = global[location]['data'][index];
+	"makeSelection" : function( location, id ){
+		global[location].selectedIndex = id;
+		var selected = global[location]['data'][id];
 		for( var key in selected ){
 			if( has(key, "id") && has(key, "_") ){
-				var target, targetObj, targetIndex;
-				
-				target = key.split("_")[0] + "s";
-				targetObj = global[target]["hash"][selected[key]];
-				targetIndex = targetObj['index'];
+				var target;
 
-				global.makeSelection( target, targetIndex );
+				try{	
+					target = key.split("_")[0] + "s";
+					global.makeSelection( target, selected[key] );
+				} catch(e){
+					console.log("Error Was Encountered while Selecting " + key + " " + e.toString() );
+				}
+				
 			}
 		}
 		return;
+	},
+	"save" : function(location, data){
+		location = global[location];
+		var firstLoad = false;
+
+		if( location['min'] === undefined ){
+			location['min'] = Number(data[0]['id']);
+			location['max'] = 0;
+			firstLoad = true;
+		}
+		for(var i=0; i < data.length; i++){
+			location['data'][data[i]['id']] = data[i];
+
+			if( firstLoad ){
+				if( location['min'] > Number(data[i]['id'])   )
+					location['min'] = Number( data[i]['id'] );
+				if( location['max'] < Number(data[i]['id']) )
+					location['max'] = Number(data[i]['id'])
+			}
+		}
 	}
 };

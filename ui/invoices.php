@@ -59,7 +59,13 @@
 			$enable_id_field = true;
 			include 'invoiceForm.php';
 		?>
+
+		<?php 
+			$table_id = "transactionsTable"; 
+			include 'transactionTable.php';
+		?>
 	</div>
+
 	
 </div>
 

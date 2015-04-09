@@ -10,6 +10,7 @@
 	$orderBy = isset($_GET['orderby']) ? $_GET['orderby'] : "";
 	$orderType = isset($_GET['ordertype']) ? $_GET['ordertype'] : "";
 	$condition = "";
+	$condition2 = isset($_GET['condition']) ? $_GET['condition'] : "";
 
 	$myObject = new table($con, $objectType);
 
@@ -22,12 +23,13 @@
 		}
 	}
 
-	if( strlen($condition) > 0 ){
+	if( strlen($condition2) === 0 && strlen($condition) > 0 ){
 		$length = strlen($condition);
 		$condition = substr($condition, 0, $length - 5 );
 	}
 
-	$myObject->getData($condition, $orderBy, $orderType, $limit);
+	$condition .= $condition2;
 
+	$myObject->getData($condition, $orderBy, $orderType, $limit);
 	$myObject->executeQuery();
 	echo $myObject->getJSON();

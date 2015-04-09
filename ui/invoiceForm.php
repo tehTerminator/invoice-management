@@ -4,21 +4,21 @@
 
 		<div class="row" data-source="customers">
 			<div class="ui header">Customer Information</div>
-			<div class="ui three fields" data-source="customer">
+			<div class="ui three fields">
 
 				<div class="two wide field">
 					<label for="customer_id">Customer Id</label>
-					<input type="text" name="customer_id" readonly tabindex="-1">
+					<input type="text" name="id" readonly tabindex="-1">
 				</div>
 
 				<div class="four wide field">
 					<label for="customer_name">Customer Name</label>
-					<input type="text" name="customer_name" readonly tabindex="-1">
+					<input type="text" name="name" readonly tabindex="-1">
 				</div>
 
 				<div class="ten wide field">
 					<label for="customer_company">Company</label>
-					<input type="text" name="customer_company" readonly tabindex="-1">
+					<input type="text" name="company" readonly tabindex="-1">
 				</div>
 
 			</div>
@@ -29,7 +29,7 @@
 			<?php if( $enable_id_field ): ?>
 
 			<div class="field">
-				<label for="id">Invoice Date</label>
+				<label for="id">Invoice Id</label>
 				<input type="number" name="id" data-required="true" tabindex="-1">
 			</div>
 

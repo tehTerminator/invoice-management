@@ -4,27 +4,19 @@ jQuery("document").ready(function(){
 	executeTasks( global.tasks );
 });
 
-function selectInvoice( element ){
-	"use strict";
-	var index = jQuery(element).closest("tr").attr("data-index"),
-		table = jQuery(element).closest("table")
-		source = global[table.attr("data-index")],
-		parent = table.closest("[data-next]"),
-		next = jQuery("#" + parent.attr("data-next"));
-
-	source['selectedIndex'] = index;
-	parent.hide();
-	next
-}
-
 function loadTransactions(){
-	return;
+
+	global.clearCachedData('transactions');
+	load('transactions|invoice_id=' + global['invoices']['selectedIndex']);
+	setTimeout(function(){
+		jQuery("#transactionsTable").fillTable();
+	}, 2000);
 }
 
 //Change Rate in Row
 function updateRow( element ){
 	"use strict";
-	var rate = global['products']['hash'][element.value]['rate'];
+	var rate = global['products']['data'][element.value]['rate'];
 	jQuery("#rate").val( rate );
 	updateAmount();
 }
@@ -60,11 +52,18 @@ function moreEvents(){
 	});
 
 	jQuery("#addRowBtn").on('click', function(){
+
+		if( global['transactions'] === undefined ){
+			global['transactions'] = {
+				'hash' : {}
+			}
+		}
+
 		var product_id = jQuery("#product_id").val(),
 			quantity = jQuery("#quantity").val(),
 			discount = jQuery("#discount").val();
 
-		var transactions = global['transactions']
+		var transactions = global['transactions'];
 
 		//If Products are not already available in Transaction then Add Product
 		if( transactions['hash'][product_id] !== undefined ){
@@ -118,7 +117,6 @@ function removeTransaction(element){
 
 	element.closest("tr").slideUp('fast').remove();
 
-	table.clearTable();
 	table.fillTable();
 }
 

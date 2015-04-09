@@ -1,44 +1,21 @@
-function setTask( name ){
-	global.server.current = name;
-}
+function setTask( name ){ global.server.current = name; }
+function showMainLoader(){ jQuery(".active.tab").addClass("loading"); }
+function updateLoader(){ jQuery("#task").html( global.server.current ); }
+function hideMainLoader(){ jQuery(".active.tab").removeClass("loading"); }
 
-function showMainLoader(){
-	"use strict";
-	jQuery(".active.tab").addClass("loading");
-}
-
-function updateLoader(){
-	"use strict";
-	
-
-	jQuery("#task").html( global.server.current );
-	// jQuery("#completed").html( global['server']['completedTasks']);
-	// jQuery("#totalTask").html( global['server']['totalTasks']);
-}
-
-function hideMainLoader(){
-	"use strict";
-	jQuery(".active.tab").removeClass("loading");
+/**
+* @description Finds a character in String
+* @return Boolean
+*/
+function has( some_string, character){
+	return some_string.indexOf(character) !== -1
 }
 
 function initTabs(){
-	"use strict";
-	setTask("Initializing Tabs");
-
-	//Hiding All Tabs other than First Tab
 	jQuery(".ui.tabular.menu .item").tab();
-
-	jQuery("[data-prev]").hide();
-
 }
 
 function initControls(){
-	"use strict";
-
-	setTask("Initializing Controls")
-
-	
-
 	jQuery(".back.button").on('click', function(){
 			var parent = jQuery(this).closest("[data-prev]"),
 			prevElement = parent.attr("data-prev");
@@ -61,17 +38,15 @@ function initControls(){
 function delBtnPress(me){
 	"use strict";
 	var index = jQuery(me).closest("tr").attr("data-index"),
-	source = (jQuery(me).closest("table").attr("data-source")),
-	i = global[source][index].id,
-	link = "php/deleteData?t=" + source;
+	source = jQuery(me).closest("table").attr("data-source"),
+	link = "php/deleteData";
 
 	jQuery.ajax({
 			url: link,
 			type: 'post',
-			data: { "id" : i },
-			success: function (data) {
-				jQuery(me).closest("tr").slideUp('slow').remove();
-			}
+			data: { "t" : source, "id" : index },
+			dataType : 'json',
+			success: function (data) { jQuery(me).closest("tr").slideUp('slow').remove(); }
 		});
 
 }
@@ -82,15 +57,10 @@ function selectBtnPress(me){
 		target = jQuery(me).closest("table").attr("data-source"),
 		source = global[target],
 		next = jQuery(me).closest("[data-next]").attr("data-next");
-
 	jQuery(me).closest("[data-next]").hide();
 	jQuery("#" + next).fadeIn('slow');
-	
 	global['makeSelection']( target, index );
-
-	jQuery("#" + next).find(['data-source']).each(function(){
-		jQuery(this).updateForm();
-	});
+	jQuery("#" + next).updateForm();
 }
 
 function initForms(){
@@ -100,12 +70,12 @@ function initForms(){
 
 	var forms = jQuery(".form.segment[data-validation='true']");
 
-	for( var i=0; i<forms.length; i++){
+	forms.each(function(){
 		var validationRule = {},
-		myForm = forms.eq(i),
+		myForm = jQuery(this),
 		elements = myForm.find("input[data-required='true'], textarea[data-required='true']");
-		for(var j=0;j<elements.length;j++){
-			var currElement = elements.eq(j);
+		elements.each(function(){
+			var currElement = jQuery(this);
 
 			validationRule[ currElement.attr("name") ] = {
 				identifier : currElement.attr("name"),
@@ -116,13 +86,11 @@ function initForms(){
 			};
 
 			var rules = currElement.attr("data-rules");
-			if( rules === undefined )
-				continue;
+			if( rules === undefined ) return;
 
 			rules = rules.split(" ");
-			for(var k=0; k< rules.length;k++){
-				if( rules[k] == "empty")
-					continue;
+			for(var k in rules){
+				if( rules[k] == "empty") continue;
 				else{
 					validationRule[currElement.attr("name")].rules.push({
 						type : rules[k],
@@ -130,32 +98,23 @@ function initForms(){
 					})
 				}
 			}
-		}
+		});
 		myForm.form( validationRule, myForm.getFormSettings() );
-	}
+	});
 }
 
 
 
-function log( message ){
-	"use strict";
-	console.log( message );
-}
+function log( message ){ console.log( message ); }
 
 function createElement( s ){
 	"use strict";
 	var a = jQuery( document.createElement(s.tag) );
 	delete s['tag'];
 	for( var attr in s ){
-		if( attr === "class" ){
-			a.addClass( s['class'] );
-		}
-		else if( attr === "html" ){
-			a.html( s['html'] );
-		}
-		else{
-			a.attr( attr, s[attr] );
-		}
+		if( attr === "class" ) a.addClass( s['class'] );
+		else if( attr === "html" ) a.html( s['html'] );
+		else a.attr( attr, s[attr] );
 	}
 
 	return a;
@@ -175,11 +134,11 @@ function fillDropdown(){
 
 		if( source == null ) return;
 
-		for(var i=0; i < source.length; i++){
+		for(var i in source){
 			var item = createElement({
 				"tag" : "div",
 				"class" : "item",
-				"data-value" : source[i]['id'],
+				"data-value" : i,
 				"html" : source[i]['name']
 			});
 			menu.append(item);
@@ -196,15 +155,8 @@ function feedback(header, statement, fn){
 }
 
 function fillAllTables(){
-	"use strict";
-
-	setTask("Inserting Data in Tables.");
-
 	jQuery(".ui.table").each(function(){
-		"use strict";
-		if( jQuery(this).attr("data-type") == "autoFill" ){
-			jQuery(this).fillTable();
-		}
+		if( jQuery(this).attr("data-type") == "autoFill" ) jQuery(this).fillTable(); 
 	});
 }
 
@@ -277,62 +229,60 @@ function initDynamicTables(){
 		});
 }
 
-function crunchData( source ){
-	var len = global[source]['data'].length;
-	source = global[source];
-	for( var i = 0; i < len; i++ ){
-		source['hash'][source.data[i].id] = source.data[i];
-		source['hash'][source.data[i].id]['index'] = i;
-	}
-}
-
 function load( arg ){
 	"use strict";
-	var param = {};
-	arg = arg.split("|");
-	var source = global[arg[0]],
-	link = "php/getData.php?t=" + arg[0],
-	currentTime = new Date(),
-	result = [];
+	var param 		= {},
+		arg 		= arg.split("|"),
+		link 		= "php/getData.php",
+		result 		= [],
+		source 		= arg[0];
 
-	if( source.createdOn !== undefined && currentTime - source.createdOn < 120000 )
-		return;
+	if( global[source] === undefined ){
+		global[source] = {
+			data 			: {},
+			selectedIndex 	: -1
+		};
+	}
 
-	for( var i = 1; i < arg.length; i++){
+	for( var i = 1, l = arg.length; i < l; i++){
 		if( has(arg[i], "=") ){
 			param[arg[i].split("=")[0]] = arg[i].split("=")[1];
 		} 
 		else if( has(arg[i], ".") ){
-			param['orderby'] = arg[i].split(".")[0];
-			param['ordertype'] = arg[i].split(".")[1];
+			param['orderby'] 	= arg[i].split(".")[0];
+			param['ordertype'] 	= arg[i].split(".")[1];
 		}
 		else {
 			param['limit'] = arg[i];
 		}
 	}
 
+	param['t'] = arg[0];
+
+	var availableData = Object.keys( global[source]['data'] ).length;
+
+	if( availableData > 0 && Object.keys( param ).length === 1 ){
+		param['condition'] = "id not between " + global[source]['min'] + " and " + global[source]['max'];
+	}
+
 	jQuery.ajax({
 			url: link,
 			type: 'get',
 			data: param,
+			dataType : "json",
 			success: function (data) {
-				try{
-					source['data'] = JSON.parse(data);
-				}
-				catch(e){ source['data'] = data }
+				result = data;
 			}
 		});
 
 	setTimeout(function(){
-		crunchData( arg[0] );
+		global.save( source, result );
 	}, 2000);
-
-	source.createdOn = currentTime;
 }
 
 function autoload(arg){
 	var q = [];
-	for(var i=0; i<arg.length;i++){
+	for(var i=0, l = arg.length; i<l;i++){
 		q.unshift( "load('" + arg[i] + "')" );
 	}
 	executeTasks( q );
@@ -380,11 +330,4 @@ function tokanize( src, expression ){
 	return stack1;
 }
 
-/**
-* @description Finds a character in String
-* @return Boolean
-*/
-function has( some_string, character){
-	return some_string.indexOf(character) !== -1
-}
 
