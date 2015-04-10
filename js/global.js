@@ -187,22 +187,19 @@ var global = {
 	},
 	"save" : function(location, data){
 		location = global[location];
-		var firstLoad = false;
 
 		if( location['min'] === undefined ){
 			location['min'] = Number(data[0]['id']);
 			location['max'] = 0;
-			firstLoad = true;
 		}
+
 		for(var i=0; i < data.length; i++){
 			location['data'][data[i]['id']] = data[i];
 
-			if( firstLoad ){
-				if( location['min'] > Number(data[i]['id'])   )
-					location['min'] = Number( data[i]['id'] );
-				if( location['max'] < Number(data[i]['id']) )
-					location['max'] = Number(data[i]['id'])
-			}
+			if( location['min'] > Number( data[i]['id'] ) )
+				location['min'] = Number( data[i]['id'] );
+			if( location['max'] < Number( data[i]['id'] ) )
+				location['max'] = Number( data[i]['id'] )
 		}
 	}
 };

@@ -5,7 +5,6 @@ jQuery("document").ready(function(){
 });
 
 function loadTransactions(){
-
 	global.clearCachedData('transactions');
 	load('transactions|invoice_id=' + global['invoices']['selectedIndex']);
 	setTimeout(function(){
@@ -35,8 +34,6 @@ function updateAmount(){
 
 //Bind Events after Some Elements are created
 function moreEvents(){
-
-	setTask("More Events");
 
 	jQuery("#postInvoiceBtn").on('click', function(){
 		
@@ -86,11 +83,6 @@ function moreEvents(){
 				"quantity" 		: transactions['hash'][pid]['quantity'],
 				"discount" 		: transactions['hash'][pid]['discount']
 			});
-
-			/*
-				"product_name" 	: global['products']['hash'][pid]['name'],
-				"rate" 			: global['products']['hash'][pid]['rate'],
-			*/
 		}
 
 		//Recreate Data in Table
@@ -138,3 +130,8 @@ function postTransactions(){
 		}
 	});
 }
+
+jQuery("#printInvoiceBtn").on('click', function(){
+	var invoice_id = jQuery("#invoice_id").val();
+	window.open("printInvoice.php?i=" + invoice_id);
+});

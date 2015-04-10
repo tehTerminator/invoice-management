@@ -64,6 +64,8 @@
 			$table_id = "transactionsTable"; 
 			include 'transactionTable.php';
 		?>
+
+		<button id="printInvoice" class="ui right floated labeled icon blue button"><i class="icon print"></i>Print</button>
 	</div>
 
 	

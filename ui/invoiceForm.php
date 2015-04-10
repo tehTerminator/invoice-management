@@ -30,7 +30,7 @@
 
 			<div class="field">
 				<label for="id">Invoice Id</label>
-				<input type="number" name="id" data-required="true" tabindex="-1">
+				<input id="invoice_id" type="number" name="id" data-required="true" tabindex="-1">
 			</div>
 
 			<?php endif; ?>
