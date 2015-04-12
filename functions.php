@@ -1,4 +1,6 @@
 <?php 
+
+
 	function load($extension){
 		$dir = "$extension/";
 
@@ -21,6 +23,13 @@
 			}
 		}
 		return false;
+	}
+
+	function get_variable($name){
+		$myObject = new Object('variables');
+		$myObject->getData("name = " . $name, "", "", "");
+		$myObject->executeQuery();
+		return $myObject->getResult();
 	}
 
 	$numbers = array("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen");

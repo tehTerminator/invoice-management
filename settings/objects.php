@@ -4,7 +4,7 @@
 	class table{
 
 		private $name;
-		public $dataRow;
+		private $dataRow;
 		private $db;
 		public $query;
 		private $stmt;
@@ -47,6 +47,10 @@
 			$this->query .= implode(", ", $colName) . ")";
 			$this->dataRow = $input;
 
+		}
+
+		function setQuery($query){
+			$this->query = $query;
 		}
 
 		function updateData($data, $condition){

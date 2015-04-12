@@ -4,16 +4,7 @@ jQuery(document).ready(function(){
 		"path" : "ui/",
 		"auto" : true,
 		'onTabLoad' : function(){
-			var link = document.location.toString().split("/");
-				scriptName = link[link.length - 1];
-
-			var s = scriptName.split(".")[0] + ".js";
-
-			if( has( document.location.href, ".php" ) ){
-				jQuery.getScript("js/extra/" + s, function(){
-					log(s + " loaded Sucessfully");
-				});				
-			}
+			loadScript();
 		},
 		'history' : true,
 		'historyType' : 'hash'
@@ -25,4 +16,24 @@ jQuery(document).ready(function(){
 		closable : false
 	});
 });
+
+function loadScript(){
+
+	setTimeout(function(){
+		var link = document.location.toString().split("/");
+		scriptName = link[link.length - 1];
+
+		var s = scriptName.split(".")[0] + ".js";
+
+		if( has( document.location.href, ".php" ) ){
+			jQuery.getScript("js/extra/" + s, function(){
+				log(s + " loaded Sucessfully");
+			});				
+		} else{
+			jQuery.getScript("js/extra/dashboard.js", function(){
+				log( "dashboard.js loaded Successfully" );
+			});
+		}
+	}, 1000);
+}
 

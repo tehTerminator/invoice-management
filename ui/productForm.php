@@ -13,20 +13,7 @@
 				<label for="name">Product Name</label>
 				<input type="text" data-required="true" name="name">
 			</div>
-
-			<div class="field">
-				<div class="ui toggle checkbox">
-					<input type="checkbox" data-required="true" name="isLimited">
-					<label for="isLimited">Limited</label>
-				</div>
-			</div>
-		</div>
-
-		<div class="two fluid fields">
-			<div class="field">
-				<label for="quantity">Available Quantity</label>
-				<input type="text" data-required="true" name="quantity">
-			</div>
+			
 			<div class="required field">
 				<label for="rate">Rate</label>
 				<div class="ui icon input">

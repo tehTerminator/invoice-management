@@ -4,8 +4,7 @@
 			<tr>
 				<th data-model="name">Name</th>
 				<th data-model="rate|currency">Rate</th>
-				<th data-model="isLimited|checkmark">Limited</th>
-				<th data-model="quantity">Quantity</th>
+				<th data-model="notes">Notes</th>
 				<th data-model="selectBtnPress(this)|selectBtn">Edit</th>
 				<th data-model="button|deleteBtn">Del</th>
 			</tr>
