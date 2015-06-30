@@ -1,22 +1,22 @@
 <div class="row">
 
-	<form id="<?php echo $form_id; ?>" class="ui form segment">
+	<form id="<?php echo $form_id; ?>" class="ui form segment" data-validation="true">
 
 		<div class="row" data-source="customers">
 			<div class="ui header">Customer Information</div>
 			<div class="ui three fields">
 
-				<div class="two wide field">
+				<div class="two wide required field">
 					<label for="customer_id">Customer Id</label>
 					<input type="text" name="id" readonly tabindex="-1">
 				</div>
 
-				<div class="four wide field">
+				<div class="four wide required field">
 					<label for="customer_name">Customer Name</label>
 					<input type="text" name="name" readonly tabindex="-1">
 				</div>
 
-				<div class="ten wide field">
+				<div class="ten wide required field">
 					<label for="customer_company">Company</label>
 					<input type="text" name="company" readonly tabindex="-1">
 				</div>
@@ -35,7 +35,7 @@
 
 			<?php endif; ?>
 				
-			<div class="field">
+			<div class="required field">
 				<label for="invoice_date">Invoice Date</label>
 				<input type="date" name="invoice_date" data-required="true" tabindex="-1">
 			</div>

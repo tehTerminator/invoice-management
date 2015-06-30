@@ -58,7 +58,7 @@ function selectBtnPress(me){
 		source = global[target],
 		next = jQuery(me).closest("[data-next]").attr("data-next");
 	jQuery(me).closest("[data-next]").hide();
-	jQuery("#" + next).fadeIn('slow');
+	jQuery("#" + next).show();
 	global['makeSelection']( target, index );
 	jQuery("#" + next).updateForm();
 }

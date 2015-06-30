@@ -1,6 +1,6 @@
 jQuery("document").ready(function(){
 	autoload(['customers', 'products', 'invoices']);
-	executeTasks( [fillDropdown, moreEvents] );
+	executeTasks( [fillDropdown] );
 	executeTasks( global.tasks );
 });
 
@@ -33,8 +33,6 @@ function updateAmount(){
 
 
 //Bind Events after Some Elements are created
-function moreEvents(){
-
 	jQuery("#postInvoiceBtn").on('click', function(){
 		
 		if( global['transactions']['data'].length == 0 ) return false;
@@ -43,14 +41,15 @@ function moreEvents(){
 		var statement = '<i class="icon warning"></i>Warning, this command will be irreversible and you wont be able to post any more transactions to the invoice. If you still want to add more Transactions please click Cancel, or Proceed by clicking Okay Button'
 
 		feedback(header, statement, function(){
-			setTask("Please Wait While We Post Transactions");
 			executeTasks(['jQuery("#addInvoiceForm").form("submit");', postTransactions]);
 		});
+
+		return false;
 	});
 
 	jQuery("#addRowBtn").on('click', function(){
 
-		if( global['transactions'] === undefined ){
+		if( global['transactions'] === undefined || global['transactions']['hash'] === undefined ){
 			global['transactions'] = {
 				'hash' : {}
 			}
@@ -94,7 +93,6 @@ function moreEvents(){
 		jQuery("#product_id").closest(".ui.dropdown").dropdown('restore defaults');
 		jQuery("[tabindex=0]").focus();
 	});
-}
 
 function removeTransaction(element){
 	"use strict";
@@ -104,7 +102,11 @@ function removeTransaction(element){
 	var dataIndex = element.closest("tr").attr("data-index"),
 	table = element.closest("table"),
 	product_id = global.transactions.data[dataIndex]['product_id'];
-	delete global.transactions['hash'][product_id];
+	try{
+		delete global.transactions['hash'][product_id];
+	} catch(e){
+		console.log( "Transaction Hash not present" );
+	}
 	global.transactions['data'].splice(dataIndex, 1);
 
 	element.closest("tr").slideUp('fast').remove();
@@ -133,5 +135,5 @@ function postTransactions(){
 
 jQuery("#printInvoiceBtn").on('click', function(){
 	var invoice_id = jQuery("#invoice_id").val();
-	window.open("printInvoice.php?i=" + invoice_id);
+	window.open("ui/printInvoice.php?i=" + invoice_id);
 });

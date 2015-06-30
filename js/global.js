@@ -138,7 +138,7 @@ var global = {
 	"templateRows" : {
 
 	},
-	"messages" : {},
+	"message" : {},
 	"clearCachedData" : function( target ){
 		if( global[target] !== undefined ){	
 			global[target]['data'] = {};
