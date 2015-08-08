@@ -3,7 +3,7 @@ jQuery(document).ready(function(){
 	jQuery("nav > a").tab({
 		"path" : "ui/",
 		"auto" : true,
-		'onTabLoad' : function(){
+		'onLoad' : function(){
 			var link = jQuery(this).attr("data-tab").split(".")[0] + ".js";
 			jQuery.getScript("js/extra/" + link, function(){
 				log(link + " loaded Sucessfully");

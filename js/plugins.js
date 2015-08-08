@@ -132,7 +132,7 @@ jQuery.fn.fillTable = function(){
 
 	var tfoot = this.find("tfoot")
 
-	if( tfoot.find("[data-model]").length > 0 ){
+	if( tfoot != undefined && tfoot.find("[data-model]").length > 0 ){
 		var	c = tfoot.find("[data-model]"),
 			fn = c.attr("data-model").split("|")[1],
 			variable = c.attr("data-model").split("|")[0];
@@ -147,6 +147,10 @@ jQuery.fn.fillTable = function(){
 		var result = global[fn](arg);
 
 		c.html( result );
+	} else{
+		var tfoot = createElement({tag:'tfoot'});
+		jQuery(this).append( tfoot );
+		tfoot.append( jQuery(this).find("thead").children().clone() );
 	}
 
 	if( this.attr("data-sortable") == "true")
@@ -158,11 +162,15 @@ jQuery.fn.fillTable = function(){
 jQuery.fn.getFormSettings = function(){
 	"use strict";
 	var myForm = jQuery(this),
-	link = myForm.attr("data-action"),
-	blurError = myForm.attr("data-inline") === undefined ? true : false;
+	link = myForm.attr("data-action");
+
+	var setting = {};
+
+	setting.form = {}
+	
 
 	return {
-        inline: blurError,
+        inline: true,
         on: 'blur',
         onSuccess: function() {
             var data = myForm.serialize();

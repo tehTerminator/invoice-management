@@ -13,7 +13,7 @@
 
 	<!-- bower:js -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
-	<script src="bower_components/jquery/dist/jquery.address.js"></script>
+	<script src="bower_components/jquery/jquery-address/src/jquery.address.js"></script>
 	<script src="bower_components/semantic-ui/dist/semantic.js"></script>
 	<script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
 	<!-- endbower -->
