@@ -5,9 +5,7 @@ jQuery(document).ready(function(){
 		"auto" : true,
 		'onLoad' : function(){
 			var link = jQuery(this).attr("data-tab").split(".")[0] + ".js";
-			jQuery.getScript("js/extra/" + link, function(){
-				log(link + " loaded Sucessfully");
-			});
+			jQuery.getScript("js/extra/" + link);
 		},
 		'history' : true,
 		'historyType' : 'hash',

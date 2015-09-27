@@ -15,7 +15,12 @@ function loadTransactions(){
 //Change Rate in Row
 function updateRow( element ){
 	"use strict";
-	var rate = global['products']['data'][element.value]['rate'];
+	var rate = 0;
+	try{
+		var rate = global['products']['data'][element.value]['rate'];
+	} catch(exception){
+		rate = 0;
+	}
 	jQuery("#rate").val( rate );
 	updateAmount();
 }
@@ -122,6 +127,7 @@ function postTransactions(){
 	for(var t in global.transactions.data){
 		global['transactions']['data'][t]['invoice_id'] = invoice_id;
 	}
+
 
 	jQuery.post("php/addData.php?t=transactions", {0:global.transactions.data}, function(data){
 		try{

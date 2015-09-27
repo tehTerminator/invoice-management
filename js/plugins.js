@@ -144,9 +144,13 @@ jQuery.fn.fillTable = function(){
 		arg['format2'] = c.attr("data-model").split("|")[2];
 		arg['source'] = source;
 
-		var result = global[fn](arg);
-
+		try{
+		var result = global[fn](arg);			
 		c.html( result );
+		} catch(ex){
+			c.html(variable);
+		}
+
 	} else{
 		var tfoot = createElement({tag:'tfoot'});
 		jQuery(this).append( tfoot );
@@ -164,11 +168,6 @@ jQuery.fn.getFormSettings = function(){
 	var myForm = jQuery(this),
 	link = myForm.attr("data-action");
 
-	var setting = {};
-
-	setting.form = {}
-	
-
 	return {
         inline: true,
         on: 'blur',
@@ -176,17 +175,17 @@ jQuery.fn.getFormSettings = function(){
             var data = myForm.serialize();
             jQuery.post(link, data, function(d) {
             	try{
-            		global.message = JSON.parse(d);
+            		global.message.push(JSON.parse(d));
             	}
             	catch(e){
-            		global.message = d;
+            		global.message.push(d);
             	}
 
                 myForm[0].reset();
 
                 if( has(link, "add") || has(link, "update") ){
                 	//If Data is added or Updated 
-                	var id = global.message.lastInsertId;
+                	var id = global.message[global.message.length - 1 ]
                 	load( link.split("=")[1] + "|id=" + id );
                 }
             });

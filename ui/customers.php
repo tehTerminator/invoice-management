@@ -1,19 +1,19 @@
 <!-- ::START:: customers.php-->
 <div class="ui top attached tabular menu">
 
-	<a class="active item" data-tab="1">
+	<a class="active item" data-tab="c1">
 		<i class="icon plus"></i>
 		Add New Customer
 	</a>
 
-	<a class="item" data-tab="2"> 
+	<a class="item" data-tab="c2"> 
 		<i class="icon edit"></i>
 		View / Delete Customer
 	</a>
 
 </div>
 
-<div class="ui bottom attached active tab segment" data-tab="1">
+<div class="ui bottom attached active tab segment" data-tab="c1">
 
 	<?php
 		$url 				= "php/addData.php?t=customers";
@@ -25,7 +25,7 @@
 
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="2">
+<div class="ui bottom attached tab segment" data-tab="c2">
 
 	<div class="container" id="selectCustomerSegment" data-next="editCustomerSegment" style="margin:0px;">
 

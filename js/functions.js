@@ -11,8 +11,10 @@ function has( some_string, character){
 	return some_string.indexOf(character) !== -1
 }
 
-function initTabs(){
-	jQuery(".ui.tabular.menu .item").tab();
+function initTabs( ){
+	jQuery(".ui.tabular.menu .item").tab({
+		'context' : 'parent'
+	});
 }
 
 function initControls(){
@@ -68,16 +70,16 @@ function initForms(){
 
 	setTask( "Initializing Forms" );
 
-	var forms = jQuery(".form.segment[data-validation='true']");
+	var forms = jQuery(".form.segment[data-validation='true']"),
+		fields = {};
 
 	forms.each(function(){
-		var validationRule = {},
-		myForm = jQuery(this),
+		var	myForm = jQuery(this),
 		elements = myForm.find("input[data-required='true'], textarea[data-required='true']");
 		elements.each(function(){
 			var currElement = jQuery(this);
 
-			validationRule[ currElement.attr("name") ] = {
+			fields[ currElement.attr("name") ] = {
 				identifier : currElement.attr("name"),
 				rules : [{
 					type : "empty",
@@ -92,14 +94,16 @@ function initForms(){
 			for(var k in rules){
 				if( rules[k] == "empty") continue;
 				else{
-					validationRule[currElement.attr("name")].rules.push({
+					fields[currElement.attr("name")].rules.push({
 						type : rules[k],
 						prompt : "Please Enter Valid " + currElement.prev("label").text()
 					})
 				}
 			}
 		});
-		myForm.form( validationRule, myForm.getFormSettings() );
+
+		var settings = jQuery.extend({}, {'fields' : fields}, myForm.getFormSettings())
+		myForm.form( settings );
 	});
 }
 

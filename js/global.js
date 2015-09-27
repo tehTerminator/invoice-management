@@ -110,6 +110,8 @@ var global = {
 			else{
 				var a = global['server']['queue'].pop();
 				global['server']['isRunning'] = true;
+
+
 				setTimeout( function(){
 					try{
 						if( typeof(a) === 'function' ) a();
@@ -138,7 +140,7 @@ var global = {
 	"templateRows" : {
 
 	},
-	"message" : {},
+	"message" : [],
 	"clearCachedData" : function( target ){
 		if( global[target] !== undefined ){	
 			global[target]['data'] = {};
@@ -189,8 +191,13 @@ var global = {
 		location = global[location];
 
 		if( location['min'] === undefined ){
-			location['min'] = Number(data[0]['id']);
-			location['max'] = 0;
+			try{
+				location['min'] = Number(data[0]['id']);
+			} catch(ex){
+				location['min'] = 9999;
+			} finally{
+				location['max'] = 0;
+			}
 		}
 
 		for(var i=0; i < data.length; i++){
@@ -199,7 +206,7 @@ var global = {
 			if( location['min'] > Number( data[i]['id'] ) )
 				location['min'] = Number( data[i]['id'] );
 			if( location['max'] < Number( data[i]['id'] ) )
-				location['max'] = Number( data[i]['id'] )
+				location['max'] = Number( data[i]['id'] );
 		}
 	}
 };

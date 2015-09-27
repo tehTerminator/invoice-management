@@ -1,19 +1,19 @@
 <!-- ::START:: invoices.php-->
 <div class="ui top attached tabular menu">
 
-	<a class="active item" data-tab="1">
+	<a class="active item" data-tab="i1">
 		<i class="icon plus"></i>
 		New Invoice
 	</a>
 
-	<a class="item" data-tab="2">
+	<a class="item" data-tab="i2">
 		<i class="icon edit"></i>
 		View / Delete Invoice
 	</a>
 
 </div>
 
-<div class="ui bottom attached active tab segment" data-tab="1">
+<div class="ui bottom attached active tab segment" data-tab="i1">
 
 	<div class="ui basic segment" id="customers" data-next="invoices">
 
@@ -45,7 +45,7 @@
 
 </div>
 
-<div class="ui bottom attached tab segment" data-tab="2">
+<div class="ui bottom attached tab segment" data-tab="i2">
 
 	<div class="container" id="selectInvoice" data-next="viewInvoice">
 		<?php $table_id="invoiceTable"; ?>
