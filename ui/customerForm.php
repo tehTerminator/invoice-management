@@ -44,6 +44,6 @@
 
 	<br />
 	<br />
-	<button class="ui right floated labeled icon blue submit button"><i class="icon save"></i>Submit</button>
+	<button class="ui labeled icon blue submit button"><i class="icon save"></i>Submit</button>
 </form>
 <!--::END:: customerForm.php-->

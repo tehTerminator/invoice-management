@@ -3,24 +3,32 @@
  ?>
 
  <body>
- 	<div class="ui stackable three column page grid">
+ 	<div class="ui full width stacked page grid">
  			
- 			<div class="four wide column"></div>
- 			<div class="eight wide column">
- 					<div class="ui basic segment"></div>
- 					
- 					<form action="checkLogin.php" method="post" class="ui form segment">
- 						
- 						<h2 class="ui header">Please Login</h2>
+			<div class="centered eight wide computer sixteen wide mobile twelve wide tablet column">
 
- 						<div class="field"><label for="username">User Name</label><input type="text" name="username"></div>
- 						<div class="field"><label for="password">Password</label><input type="password" name="password"></div>
+					
+				<form action="checkLogin.php" method="post" class="ui ui middle aligned stacked form segment">
+					<h2 class="ui header">Please Login</h2>
+					
+				
+					<div class="field">
+						<div class="ui huge left icon input">
+							<input type="text" name="username" placeholder="Username">
+							<i class="icon user"></i>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui huge left icon input">
+							<input type="password" name="password" placeholder="Password">
+							<i class="lock icon"></i>
+						</div>
+					</div>
 
-						<button class="ui fluid green submit button">Submit</button>
- 					</form>
+				<button class="ui huge fluid green submit button">Submit</button>
+				</form>
 
  			</div>
- 			<div class="four wide column"></div>
 
  	</div>
  </body>

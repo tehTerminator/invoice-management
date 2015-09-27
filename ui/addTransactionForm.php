@@ -3,8 +3,8 @@
 
 	<div id="addTransactionsForm" action="" class="ui form segment" data-validation="true">
 
-		<div class="ui six wide required fields">
-			<div class="six wide field">
+		<div class="ui six wide fields">
+			<div class="six wide required field">
 				<label for="Product">Product</label>
 				<div class="ui fluid upward selection search dropdown" data-source="products">
 					<input id="product_id" type="hidden" name="product_id" onchange="updateRow(this)">
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 
-			<div class="two wide field">
+			<div class="two wide required field">
 				<label for="rate">Rate</label>
 				<input id="rate" value="0" type="number" readonly tabindex="-1">
 			</div>

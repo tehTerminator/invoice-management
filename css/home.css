@@ -19,3 +19,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', end
 div[data-prev]{
 	display: none;
 }
+
+.middle.aligned {
+  position: relative;
+  top: 50%;
+  transform: translateY(50%);
+  -webkit-transform: translateY(50%);
+  -moz-transform: translateY(50%);
+ 
+}
+
+.full.width.grid{
+	height: 100%;
+}
