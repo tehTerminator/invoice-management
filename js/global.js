@@ -9,7 +9,7 @@ var global = {
 		},
 		"selectBtn" : function( arg ){
 			editBtn = createElement({"tag": "button", "class":"ui blue icon select button", "onclick":arg.data});
-			editBtn.append( createElement({"tag": "i", "class":"icon arrow right"}) );
+			editBtn.append( createElement({"tag": "i", "class":"icon checkmark"}) );
 			return editBtn;
 		},
 		"checkmark" : function(arg){
@@ -140,7 +140,7 @@ var global = {
 	"templateRows" : {
 
 	},
-	"message" : [],
+	"message" : {},
 	"clearCachedData" : function( target ){
 		if( global[target] !== undefined ){	
 			global[target]['data'] = {};

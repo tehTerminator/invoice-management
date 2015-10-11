@@ -30,7 +30,10 @@ jQuery.fn.updateField = function(source){
 			}
 		}
 
-		this.val( source[modal] );	
+		if( source[modal] === undefined && has(modal, "_") )
+			this.val( source[ modal.split("_")[1] ])
+		else
+			this.val( source[modal] );	
 	} catch(e){
 		return;
 	}
@@ -175,13 +178,14 @@ jQuery.fn.getFormSettings = function(){
             var data = myForm.serialize();
             jQuery.post(link, data, function(d) {
             	try{
-            		global.message.push(JSON.parse(d));
+            		global.message = JSON.parse(d);
             	}
             	catch(e){
-            		global.message.push(d);
+            		global.message = d;
             	}
 
-                myForm[0].reset();
+            	if(!( myForm.attr("data-reset") !== undefined && myForm.attr("data-reset") === "false" ) ) 
+	                myForm[0].reset();
 
                 if( has(link, "add") || has(link, "update") ){
                 	//If Data is added or Updated 

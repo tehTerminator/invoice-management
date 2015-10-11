@@ -60,8 +60,7 @@
 			$a = array();
 
 			foreach($data as $column=>$val){
-				$a[] = $column . " = :" . $column;
-				$this->dataRow[':' . $column] = $val;
+				$a[] = $column . " = '" . $val . "'";
 			}
 
 			$this->query .= implode(", ", $a) . " WHERE $condition";

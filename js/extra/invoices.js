@@ -2,6 +2,7 @@ jQuery("document").ready(function(){
 	autoload(['customers', 'products', 'invoices']);
 	executeTasks( [fillDropdown] );
 	executeTasks( global.tasks );
+
 });
 
 function loadTransactions(){
@@ -132,11 +133,76 @@ function postTransactions(){
 	jQuery.post("php/addData.php?t=transactions", {0:global.transactions.data}, function(data){
 		try{
 			global.message = JSON.parse(data)
+
+			window.open("ui/printInvoice.php?i=" + invoice_id);
 		}
 		catch(e){
 			global.message = data;
 		}
 	});
+}
+
+
+function markPaid( element ){
+	var invoiceId = jQuery(element).closest("tr").attr("data-index");
+	if( global['invoices']['data'][invoiceId]['paid'] === "1" )
+		feedback("Invoice Already Paid", "The Invoice You are trying to Mark Paid is already Paid", function(){
+			return false;
+		});
+	else{
+		feedback("Mark Invoice as Paid", "Do You want to Mark this Invoice As Paid.?", function(){
+			var note = prompt("Enter Some Payment Details");
+			$.ajax({
+					url: 'php/updateData.php?t=invoices',
+					type: 'post',
+					data: {
+						'id' : invoiceId,
+						'paid' : 1,
+						'notes' : note
+					},
+					success: function (data) {
+						jQuery(element).closest("tr").find("td > i.icon.remove").removeClass("remove").addClass("checkmark");
+						global['invoices']['data'][invoiceId]['paid'] = 1;
+						try{
+							global.message = JSON.parse(data);
+						} catch(e){
+							global.message = data;
+						}
+					}
+				});
+		});
+	}
+}
+
+function markUnpaid( element ){
+	var invoiceId = jQuery(element).closest("tr").attr("data-index");
+	if( global['invoices']['data'][invoiceId]['paid'] === "1"){
+		feedback("Mark Unpaid", "Are you sure you want to mark this Invoice Unpaid? Please Provide the reason", function(){
+			var note = prompt("Enter Reason to Mark Unpaid Invoice");
+			$.ajax({
+					url: 'php/updateData.php?t=invoices',
+					type: 'post',
+					data: {
+						'id' : invoiceId,
+						'paid' : 0,
+						'notes' : note
+					},
+					success: function (data) {
+						jQuery(element).closest("tr").find("td > i.icon.checkmark").removeClass("checkmark").addClass("remove");
+						global['invoices']['data'][invoiceId]['paid'] = 0;
+						try{
+							global.message = JSON.parse(data);
+						} catch(e){
+							global.message = data;
+						}
+					}
+				});
+		});
+	} else{
+		feedback("Already Unpaid", "The Invoice that you are trying to mark as unpaid is already mark Unpaid", function(){
+			return false;
+		});
+	}
 }
 
 jQuery("#printInvoiceBtn").on('click', function(){

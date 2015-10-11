@@ -1,6 +1,6 @@
 <div class="row">
 
-	<form id="<?php echo $form_id; ?>" class="ui form segment" data-validation="true">
+	<form id="<?php echo $form_id; ?>" class="ui form segment" data-validation="true" data-action="<?php echo $url; ?>" data-reset="false">
 
 		<div class="row" data-source="customers">
 			<div class="ui header">Customer Information</div>
@@ -8,7 +8,7 @@
 
 				<div class="two wide required field">
 					<label for="customer_id">Customer Id</label>
-					<input type="text" name="id" readonly tabindex="-1">
+					<input type="text" name="customer_id" readonly tabindex="-1">
 				</div>
 
 				<div class="four wide required field">
@@ -18,7 +18,7 @@
 
 				<div class="ten wide required field">
 					<label for="customer_company">Company</label>
-					<input type="text" name="company" readonly tabindex="-1">
+					<input type="text" name="customer_company" readonly tabindex="-1">
 				</div>
 
 			</div>
@@ -42,7 +42,7 @@
 
 			<div class="field">
 				<label for="notes">Notes</label>
-				<input type="text" id="note" name="notes" data-required="true" tabindex="-1">
+				<input type="text" id="note" name="notes" tabindex="-1">
 			</div>
 
 			<div class="field">

@@ -11,6 +11,11 @@
 		View / Delete Invoice
 	</a>
 
+	<a class="item" data-tab="i3">
+		<i class="icon money"></i>
+		Mark Paid/Unpaid
+	</a>
+
 </div>
 
 <div class="ui bottom attached active tab segment" data-tab="i1">
@@ -28,7 +33,8 @@
 
 		<?php 
 			$enable_id_field 	= false;
-			$form_id 			= "addInvoiceForm"; 
+			$form_id 			= "addInvoiceForm";
+			$url 				= "php/addData.php?t=invoices";
 			include 'invoiceForm.php'; 
 		?>
 
@@ -48,7 +54,13 @@
 <div class="ui bottom attached tab segment" data-tab="i2">
 
 	<div class="container" id="selectInvoice" data-next="viewInvoice">
-		<?php $table_id="invoiceTable"; ?>
+		<?php 
+			$table_id="invoiceTable";
+			$button_1_text = "Sel";
+			$button_1_data = "selectBtnPress(this);loadTransactions(this)|selectBtn";
+			$button_2_text = "Del";
+			$button_2_data = "deleteInvoice|deleteBtn"
+		 ?>
 		<?php include 'invoiceTable.php' ?>
 	</div>
 
@@ -69,6 +81,17 @@
 	</div>
 
 	
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="i3">
+	<?php 
+		$form_id = "markInvoiceTable";
+		$button_1_text = "Paid";
+		$button_1_data = "markPaid(this)|selectBtn";
+		$button_2_text = "Unpaid";
+		$button_2_data = "markUnpaid(this)|deleteBtn";
+		include 'invoiceTable.php';
+	 ?>
 </div>
 
 

@@ -8,8 +8,8 @@
 			<th data-model="customer_name|query">Customer Name</th>
 			<th data-model="invoice_date">Posted On</th>
 			<th data-model="paid|checkmark">Invoice Paid</th>
-			<th data-model="selectBtnPress(this);loadTransactions(this)|selectBtn">Sel</th>
-			<th data-model="deleteInvoice|deleteBtn">Del</th>
+			<th data-model="<?php echo $button_1_data; ?>"><?php echo $button_1_text; ?></th>
+			<th data-model="<?php echo $button_2_data ?>"><?php echo $button_2_text; ?></th>
 		</tr>
 	</thead>
 
