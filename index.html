@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Invoice Management Application</title>
+
+    <link rel="stylesheet" href="core/css/reset.css">
+
+    <!--bower:js-->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/semantic/dist/semantic.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <!--endbower-->
+
+    <script src="core/js/home.js"></script>
+    <script src="core/js/mainApp.js"></script>
+    <script src="core/js/directives.js"></script>
+    <script src="core/js/controllers/sidebar.controller.js"></script>
+    <script src="core/js/controllers/customers.controller.js"></script>
+    <script src="core/js/controllers/invoices.controller.js"></script>
+    <script src="core/js/controllers/products.controller.js"></script>
+
+    <!--bower:css-->
+    <!--endbower-->
+    <link rel="stylesheet" href="bower_components/semantic/dist/semantic.css">
+
+</head>
+
+<body ng-app="MainApp">
+    <side-bar></side-bar>
+    <div class="pusher">
+        <!-- TOP BAR -->
+        <div class="ui sticky massive menu">
+            <a class="icon item" id="sidebarToggleButton">
+                <i class="icon sidebar"></i>
+            </a>
+            <div class="header item">
+                Invoice Management
+            </div>
+        </div>
+        <!--::END:: TOP BAR-->
+        <div id="container" class="ui one column grid">
+            <div class="ui column" ng-view>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

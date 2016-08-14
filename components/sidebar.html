@@ -1,0 +1,17 @@
+<div 
+    class="ui massive inverted vertical left menu sidebar" 
+    ng-controller="SidebarController" 
+    ng-init="getItems();initComponent();">
+    
+    <div class="item" ng-repeat="item in items">
+        <a href="{{ item.url }}" class="header">
+            {{ item.name }}
+            <div class="menu">
+                <a href="{{ subItem.url }}" class="item" ng-repeat="subItem in item.children">
+                    {{ subItem.name }}
+                    <i class="icon {{ subItem.icon }}"></i>
+                </a>
+            </div>
+        </a>
+    </div>
+</div>

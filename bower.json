@@ -1,5 +1,5 @@
 {
-  "name": "masterApp",
+  "name": "masterapp",
   "version": "1.0.0",
   "authors": [
     "Prateek Kher <prateek.kher@gmail.com>"
@@ -18,7 +18,9 @@
   ],
   "dependencies": {
     "jquery": "~2.1.1",
-    "semantic-ui": "2.0.7",
-    "datatables": "~1.10.4"
+    "angular": "^1.5.8",
+    "semantic": "semantic-ui#^2.2.2",
+    "angular-route": "^1.5.8",
+    "controllers" : "core/js/controllers"
   }
 }

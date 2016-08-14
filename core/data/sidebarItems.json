@@ -1,0 +1,68 @@
+{
+    "items" : [
+        {
+            "name" : "Customers",
+            "url" : "#customers",
+            "children" : [
+                {
+                    "name" : "Add",
+                    "icon" : "icon add",
+                    "url" : "#customers/add"
+                },
+                {
+                    "name" : "Edit",
+                    "icon" : "icon edit",
+                    "url" : "#customers/edit"
+                },
+                {
+                    "name" : "Report",
+                    "icon" : "icon book",
+                    "url" : "#customers/add"
+                }
+            ]
+        },
+        {
+            "name" : "Products",
+            "url" : "#products",
+            "children" : [
+                {
+                    "name" : "Add",
+                    "icon" : "icon add",
+                    "url" : "#products/add"
+                },
+                {
+                    "name" : "Edit",
+                    "icon" : "icon edit",
+                    "url" : "#products/edit"
+                },
+                {
+                    "name" : "Report",
+                    "icon" : "icon book",
+                    "url" : "#products/add"
+                }
+            ]
+        },
+        {
+            "name" : "Invoices",
+            "url" : "#invoices",
+            "children" : [
+                {
+                    "name" : "Add",
+                    "icon" : "icon add",
+                    "url" : "#invoices/add"
+                },
+                {
+                    "name" : "Edit",
+                    "icon" : "icon edit",
+                    "url" : "#invoices/edit"
+                },
+                {
+                    "name" : "Report",
+                    "icon" : "icon book",
+                    "url" : "#invoices/add"
+                }
+            ]
+        }
+
+    ]
+}
