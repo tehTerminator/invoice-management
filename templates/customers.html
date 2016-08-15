@@ -1,25 +1,33 @@
 <div class="ui paged segment">
-    
-    <table-header></table-header>
 
-    <table class="ui bottom attached selectable sortable table segment">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="item in customers | filter:queryText | paged:itemsPerPage:currentPage ">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.address }}</td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="ui raised form segment" ng-show="isSelected">
+        <h2 class="ui header">Customer Form</h2>
+        <div class="ui two fields">
+            <div class="ui four wide readonly field">
+                <label for="customer_id">Customer Id</label><input type="text" readonly="readonly" ng-bind="selectedCustomer.id">
+            </div>
+            <div class="required field">
+                <label for="customerName">Customer Name</label>
+                <input type="text" name="customerName" ng-model="selectedCustomer.name">
+            </div>
+        </div>
+
+        <div class="ui field">
+            <label for="address">Address</label>
+            <textarea name="address" ng-model="selectedCustomer.address"></textarea>
+        </div>
+
+        <div class="ui green labeled icon submit button">
+            <i class="icon save"></i>
+            Save
+        </div>
+
+        <div class="ui red button">
+            Cancel
+        </div>
+    </div>
+
+    <table-header></table-header>
+    <customer-table></customer-table>
 
 </div>

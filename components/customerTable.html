@@ -1,0 +1,30 @@
+<table class="ui bottom attached selectable sortable table segment" ng-hide="isSelected">
+        <thead>
+            <tr>
+                <th class="two wide">#</th>
+                <th class="five wide">Name</th>
+                <th class="six wide">Address</th>
+                <th class="three wide">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in customers | filter:queryText | paged:itemsPerPage:currentPage ">
+                <td>
+                    {{ item.id }}
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+                <td>
+                    <div class="ui blue button" ng-click="selectCustomer(item)">
+                        Select
+                        <i class="icon right arrow"></i>
+                    </div>
+                    <div class="ui red circular icon button">
+                        <i class="icon trash"></i>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
