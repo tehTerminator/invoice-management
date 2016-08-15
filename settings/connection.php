@@ -1,8 +1,8 @@
 <?php 
 	define('LOCALHOST', "localhost");
 	define('USERNAME', 'root');
-	define('PASSWORD', '');
-	define('DATABASE', 'masterApp');
+	define('PASSWORD', 'Toor*7391');
+	define('DATABASE', 'billings');
 
 	$connectionString = sprintf("mysql:host=%s;dbname=%s", LOCALHOST, DATABASE);
 

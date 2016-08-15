@@ -15,7 +15,6 @@
 		}
 	}
 
-
 	function isMulti($arr){
 		if( is_array($arr) ){
 			foreach($arr as $a){

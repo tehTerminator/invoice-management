@@ -1,16 +1,22 @@
 <?php
-	define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT'] . "/masterApp");
-
+	define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT'] . "/projects/masterApp");
+	
 	include_once ROOT_DIR . "/settings/connection.php";
 	require_once ROOT_DIR . "/settings/objects.php";
+
 
 	session_start();
 
 	$username = $_POST['username'];
-	$password = md5( $_POST['password'] );
+	$password = $_POST['password'];
 
 	$myObject = new table($con, 'dbuser');
 	$myObject->getData("username = '$username' AND password = '$password'", "", "", "");
+
+	echo $myObject->query;
+
+
+
 	$myObject->executeQuery();
 
 	$result = $myObject->getResult();
