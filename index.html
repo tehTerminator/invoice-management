@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="MainApp">
 
 <head>
     <title>Invoice Management Application</title>
@@ -20,6 +20,8 @@
     <script src="core/js/controllers/customers.controller.js"></script>
     <script src="core/js/controllers/invoices.controller.js"></script>
     <script src="core/js/controllers/products.controller.js"></script>
+    <script src="core/js/controllers/dashboard.controller.js"></script>
+    <script src="core/js/controllers/pagination.controller.js"></script>
 
     <!--bower:css-->
     <!--endbower-->
@@ -27,11 +29,11 @@
 
 </head>
 
-<body ng-app="MainApp">
+<body>
     <side-bar></side-bar>
     <div class="pusher">
         <!-- TOP BAR -->
-        <div class="ui sticky massive menu">
+        <div class="ui massive menu">
             <a class="icon item" id="sidebarToggleButton">
                 <i class="icon sidebar"></i>
             </a>
@@ -40,7 +42,7 @@
             </div>
         </div>
         <!--::END:: TOP BAR-->
-        <div id="container" class="ui one column grid">
+        <div id="container" class="ui one column container grid">
             <div class="ui column" ng-view>
 
             </div>

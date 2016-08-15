@@ -4,3 +4,10 @@ app.directive('sideBar', function(){
         'templateUrl' : 'components/sidebar.html'
     }
 });
+
+app.directive('tableHeader', function(){
+    return {
+        'restrict' : 'E',
+        'templateUrl' : 'components/tableHeader.html'
+    }
+})

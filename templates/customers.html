@@ -1,3 +1,25 @@
-<div class="ui segment">
-    <div class="header">Customers</div>
+<div class="ui paged segment">
+    
+    <table-header></table-header>
+
+    <table class="ui bottom attached selectable sortable table segment">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in customers | filter:queryText | paged:itemsPerPage:currentPage ">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>

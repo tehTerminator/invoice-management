@@ -1,0 +1,52 @@
+<div 
+    class="ui top attached compact secondary menu" 
+    ng-controller="PaginationController">
+    <a class="item">
+        <i class="icon add"></i>
+        Add Item
+    </a>
+    <a class="item" ng-click="getCustomers()">
+        <i class="icon refresh"></i> Refresh
+    </a>
+
+    <a class="item" ng-click="firstPage()" title="First Page" ng-class="isFirst()?'disabled' : ''">
+        <i class="icon fast backward"></i>
+    </a>
+    <a class="item" title="Previous Page" ng-click="prevPage()" ng-class="isFirst()?'disabled' : ''">
+        <i class="icon caret left"></i>
+    </a>
+    <div class="ui dropdown item">
+        Page - {{ pageIndex }} / {{ totalPages }}
+        <div class="menu">
+            <div class="item" ng-repeat="i in pageArray" ng-click="setPage(i)">{{ i }}</div>
+        </div>
+    </div>
+    <a class="item" title="Next Page" ng-click="nextPage()" ng-class="isLast()?'disabled' : ''">
+        <i class="icon caret right"></i>
+    </a>
+    <a class="item" title="Last Page" ng-click="lastPage()" ng-class="isLast()?'disabled' : ''">
+        <i class="icon fast forward"></i>
+    </a>
+
+    <div class="ui pointing dropdown item" ng-init="initDropdown()">
+        Items Per Page : {{ pageLength }}
+        <i class="icon dropdown"></i>
+        <div class="menu">
+            <div 
+                class="item" 
+                ng-repeat="i in [5, 10, 15, 20, 25]" 
+                ng-click="setPageLength(i)">
+                {{ i }}
+            </div>
+        </div>
+    </div>
+
+    <div class="ui right menu">
+        <div class="item">
+            <div class="ui transparent icon input">
+                <input type="text" placeholder="Search.." ng-model="searchText" ng-change="resetPage()">
+                <i class="icon search"></i>
+            </div>
+        </div>
+    </div>
+</div>

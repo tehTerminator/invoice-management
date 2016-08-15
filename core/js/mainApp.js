@@ -1,10 +1,12 @@
+var LINK = "core/php/sql.php";
+
 var app = angular.module('MainApp', ['ngRoute']);
 
 app.config(function($routeProvider){
     $routeProvider
         .when('/', {
             'templateUrl' : 'templates/dashboard.html',
-            'controller' : 'DashBoardController'
+            'controller' : 'DashboardController'
         })
 
         .when('/customers', {
